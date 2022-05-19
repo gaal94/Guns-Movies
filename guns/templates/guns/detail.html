@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block content %}
+  <h1>총 이름: {{ gun.gun_name }}</h1>
+  <img style='width: 200px;' src="{% static gun.gun_image_path %}" alt="AK-47">
+  <p>총 제작자 : {{ gun.manufacturer }}</p>
+  <p>총 무게 : {{ gun.gun_weight }}</p>
+  <p>총 길이 : {{ gun.gun_length }}</p>
+  <p>구경 : {{ gun.gun_caliber }}</p>
+  <p>종류 : {{ gun.gun_type }}</p>
+  <form class="like-form" action="{% url 'guns:like' gun.pk %}" method="POST" class="d-inline" data-gun-id="{{ gun.pk }}">
+    {% csrf_token %}
+    {% if user in gun.like_users.all %}
+      <button id="like-{{ gun.pk }}">좋아요 취소</button>
+    {% else %}
+      <button id="like-{{ gun.pk }}">좋아요</button>
+    {% endif %}
+  </form>
+  <p><span id="like-count-{{ gun.pk }}">{{ gun.like_users.all|length }}</span> 명이 이 총을 좋아합니다.</p>
+{% endblock %}
+
+{% block script %}
+  <script>
+    const forms = document.querySelectorAll('.like-form')
+    const csrf_token = document.querySelector('[name=csrfmiddlewaretoken]').value
+    forms.forEach(form => {
+      form.addEventListener('submit', function (event) {
+        event.preventDefault()
+        const gunId = event.target.dataset.gunId
+        axios({
+          method: 'post',
+          url: `http://127.0.0.1:8000/guns/${gunId}/like/`,
+          headers: {'X-CSRFToken': csrf_token},
+        })
+        .then(response => {
+          const count = response.data.count
+          const liked = response.data.liked
+          const likeButton = document.querySelector(`#like-${gunId}`)
+          const likeCount = document.querySelector(`#like-count-${gunId}`)
+          if (liked === true) {
+            likeButton.innerText = '좋아요 취소'
+          } else {
+            likeButton.innerText = '좋아요'
+          }
+          likeCount.innerText = count
+        })
+      })
+    })
+  </script>
+{% endblock %}

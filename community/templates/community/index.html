@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <h1>Community</h1>
+  <form action="{% url 'community:index' %}">
+    <p>검색
+      <select name="search_type" id="search_type">
+        <option value="search_by_review_title">리뷰 제목</option>
+        <option value="search_by_review_content">리뷰 내용</option>
+        <option value="search_by_review_user">리뷰 작성자</option>
+        <option value="search_by_comment_content">댓글 내용</option>
+        <option value="search_by_comment_user">댓글 작성자</option>
+      </select>
+      <input type="text" name="search_keyword"><button>검색</button></p>
+  </form>
+  <hr>
+  {% if reviews %}
+    {% for review in reviews %}
+    <p>작성자 : <a href="{% url 'accounts:profile' review.user.username %}">{{ review.user }}</a></p>
+    <p>글 번호: {{ review.pk }}</p>
+    <p>글 제목: {{ review.title }}</p>
+    <p>글 내용: {{ review.content }}</p>
+    <form class="like-form" action="{% url 'community:like' review.pk %}" method="POST" class="d-inline" data-review-id="{{ review.pk }}">
+      {% csrf_token %}
+      {% if user in review.like_users.all %}
+      <button id="like-{{ review.pk }}">좋아요 취소</button>
+      {% else %}
+      <button id="like-{{ review.pk }}">좋아요</button>
+      {% endif %}
+    </form>
+    <p><span id="like-count-{{ review.pk }}">{{ review.like_users.all|length }}</span> 명이 이 글을 좋아합니다.</p>
+    <a href="{% url 'community:detail' review.pk %}">[detail]</a>
+    <hr>
+    {% endfor %}
+  {% elif comments %}
+    {% for comment in comments %}
+    <p>작성자 : <a href="{% url 'accounts:profile' comment.user.username %}">{{ comment.user }}</a></p>
+    <p>댓글 번호: {{ comment.pk }}</p>
+    <p>댓글 내용: {{ comment.content }}</p>
+    <a href="{% url 'community:detail' comment.review.pk %}">[detail]</a>
+    <hr>
+    {% endfor %}
+  {% endif %}
+{% endblock %}
+
+{% block script %}
+  <script>
+    const forms = document.querySelectorAll('.like-form')
+    const csrf_token = document.querySelector('[name=csrfmiddlewaretoken]').value
+    forms.forEach(form => {
+      form.addEventListener('submit', function (event) {
+        event.preventDefault()
+        const reviewId = event.target.dataset.reviewId
+        axios({
+          method: 'post',
+          url: `http://127.0.0.1:8000/community/${reviewId}/like/`,
+          headers: {'X-CSRFToken': csrf_token},
+        })
+        .then(response => {
+          const count = response.data.count
+          const liked = response.data.liked
+          const likeButton = document.querySelector(`#like-${reviewId}`)
+          const likeCount = document.querySelector(`#like-count-${reviewId}`)
+          if (liked === true) {
+            likeButton.innerText = '좋아요 취소'
+          } else {
+            likeButton.innerText = '좋아요'
+          }
+          likeCount.innerText = count
+        })
+      })
+    })
+  </script>
+{% endblock %}

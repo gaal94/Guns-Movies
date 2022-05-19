@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block content %}
+  <h1>Guns</h1>
+  <form action="{% url 'guns:index' %}">
+    <p>검색
+      <select name="search_type" id="search_type">
+        <option value="search_by_name">총 이름</option>
+        <option value="search_by_type">총 종류</option>
+      </select>
+      <input type="text" name="search_keyword"><button>검색</button></p>
+  </form>
+  {% for gun in guns %}
+    <a href="{% url 'guns:detail' gun.pk %}"><img style='width: 200px;' src="{% static gun.gun_image_path %}" alt="AK-47"></a>
+    <h2>총 이름: {{ gun.gun_name }}</h2>
+    <p>총 제작자 : {{ gun.manufacturer }}</p>
+    <form class="like-form" action="{% url 'guns:like' gun.pk %}" method="POST" class="d-inline" data-gun-id="{{ gun.pk }}">
+      {% csrf_token %}
+      {% if user in gun.like_users.all %}
+        <button id="like-{{ gun.pk }}">좋아요 취소</button>
+      {% else %}
+        <button id="like-{{ gun.pk }}">좋아요</button>
+      {% endif %}
+    </form>
+    <p><span id="like-count-{{ gun.pk }}">{{ gun.like_users.all|length }}</span> 명이 이 총을 좋아합니다.</p>
+    <hr>
+  {% endfor %}
+{% endblock %}
+
+{% block script %}
+  <script>
+    const forms = document.querySelectorAll('.like-form')
+    const csrf_token = document.querySelector('[name=csrfmiddlewaretoken]').value
+    forms.forEach(form => {
+      form.addEventListener('submit', function (event) {
+        event.preventDefault()
+        const gunId = event.target.dataset.gunId
+        axios({
+          method: 'post',
+          url: `http://127.0.0.1:8000/guns/${gunId}/like/`,
+          headers: {'X-CSRFToken': csrf_token},
+        })
+        .then(response => {
+          const count = response.data.count
+          const liked = response.data.liked
+          const likeButton = document.querySelector(`#like-${gunId}`)
+          const likeCount = document.querySelector(`#like-count-${gunId}`)
+          if (liked === true) {
+            likeButton.innerText = '좋아요 취소'
+          } else {
+            likeButton.innerText = '좋아요'
+          }
+          likeCount.innerText = count
+        })
+      })
+    })
+  </script>
+{% endblock %}

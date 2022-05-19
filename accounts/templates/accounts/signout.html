@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>회원탈퇴</h1>
+<form action="" method="POST">
+  {% csrf_token %}
+  <p>비밀번호 확인: </p>
+  <input type="password" name="password">
+  <input type="submit">
+</form>
+{% endblock  %}

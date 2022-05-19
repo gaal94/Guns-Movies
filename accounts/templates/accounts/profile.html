@@ -1,0 +1,88 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <h1>{{ person.username }}의 프로필 페이지</h1>
+  {% with followings=person.followings.all followers=person.followers.all %}
+    <div>
+      <div>
+        팔로잉 : {{ followings|length }} / 팔로워 : <span id="follow-count">{{ followers|length }}</span>
+      </div>
+      {% if request.user != person %}
+        <div>
+          <form id="follow-form" action="{% url 'accounts:follow' person.pk %}" method="POST" data-person-id="{{ person.pk }}">
+            {% csrf_token %}
+            {% if request.user in followers %}
+              <button id="followBtn">언팔로우</button>
+            {% else %}
+              <button id="followBtn">팔로우</button>
+            {% endif %}
+          </form>
+        </div>
+      {% endif %}
+      <p>가입일 : {{ user.date_joined }}</p>
+      <h2>좋아요한 영화 목록 ({{ user.like_movies.all|length }})</h2>
+      <ul>
+        {% for movie in user.like_movies.all %}
+          <li><a href="{% url 'movies:detail' movie.pk %}">{{ movie.title }}</li></a>
+        {% endfor %}
+      </ul>
+      <hr>
+      <h2>좋아요한 총 목록 ({{ user.like_guns.all|length }})</h2>
+      <ul>
+        {% for gun in user.like_guns.all %}
+          <li><a href="{% url 'guns:detail' gun.pk %}">{{ gun.gun_name }}</li></a>
+        {% endfor %}
+      </ul>
+      <hr>
+      <h2>좋아요한 리뷰 목록 ({{ user.like_reviews.all|length }})</h2>
+      <ul>
+        {% for review in user.like_reviews.all %}
+          <li><a href="{% url 'community:detail' review.pk %}">{{ review.title }}</li></a>
+        {% endfor %}
+      </ul>
+      <hr>
+      <h2>작성한 리뷰 목록 ({{ user.review_set.all|length }})</h2>
+      <ul>
+        {% for review in user.review_set.all %}
+          <li><a href="{% url 'community:detail' review.pk %}">{{ review.title }}</li></a>
+        {% endfor %}
+      </ul>
+      <hr>
+      <h2>작성한 댓글 목록 ({{ user.comment_set.all|length }})</h2>
+      <ul>
+        {% for comment in user.comment_set.all %}
+          <li><a href="{% url 'community:detail' comment.review.pk %}">{{ comment.content }}</li></a>
+        {% endfor %}
+      </ul>
+      <hr>
+    </div>
+  {% endwith %}
+{% endblock %}
+
+{% block script %}
+  <script>
+    const form = document.querySelector('#follow-form')
+    const csrf_token = document.querySelector('[name=csrfmiddlewaretoken]').value
+    form.addEventListener('submit', function(event) {
+      event.preventDefault()
+      const personId = event.target.dataset.personId
+      axios({
+        method: 'post',
+        url: `http://127.0.0.1:8000/accounts/${personId}/follow/`,
+        headers: {'X-CSRFToken': csrf_token},
+      })
+      .then(response => {
+        const count = response.data.count
+        const followed = response.data.followed
+        const followButton = document.querySelector('#followBtn')
+        const followCount = document.querySelector('#follow-count')
+        if (followed === true) {
+          followButton.innerText = '언팔로우'
+        } else {
+          followButton.innerText = '팔로우'
+        }
+        followCount.innerText = count
+      })
+    })
+  </script>
+{% endblock %}

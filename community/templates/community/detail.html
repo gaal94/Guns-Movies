@@ -1,0 +1,88 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <h2 class="text-center">DETAIL</h2>
+  <h3>{{ review.pk }} 번째 글</h3>
+  <hr>
+  <p>제목: {{ review.title }}</p>
+  <p>영화 제목: {{ review.movie_title }}</p>
+  <p>내용: {{ review.content }}</p>
+  <p>평점: {{ review.rank }}</p>
+  <p>작성 시각: {{ review.created_at }}</p>
+  <p>수정 시각: {{ review.updated_at }}</p>
+  <form class="like-form" action="{% url 'community:like' review.pk %}" method="POST" class="d-inline" data-review-id="{{ review.pk }}">
+    {% csrf_token %}
+    {% if user in review.like_users.all %}
+      <button id="like-{{ review.pk }}">좋아요 취소</button>
+    {% else %}
+      <button id="like-{{ review.pk }}">좋아요</button>
+    {% endif %}
+  </form>
+  <p><span id="like-count-{{ review.pk }}">{{ review.like_users.all|length }}</span> 명이 이 글을 좋아합니다.</p>
+  {% if review.user == request.user %}
+    <a href="{% url 'community:update' review.pk %}">UPDATE</a>
+    <form action="" method="POST">
+      {% csrf_token %}
+      <button>DELETE</button>
+    </form>
+  {% endif %}
+  <hr>
+  <h4>댓글 목록</h4>
+  {% if comments|length %}
+    <p><b>{{ comments|length }}개의 댓글이 있습니다.</b></p>
+  {% endif %}
+  {% for comment in comments %}
+    <div>
+      {{ comment.user }} - {{ comment.content }}
+      {% if comment.user == request.user %}
+        <form action="{% url 'community:delete_comment' review.pk comment.pk %}" method="POST">
+          {% csrf_token %}
+          <button>DELETE</button>
+        </form>
+      {% endif %}
+    </div>
+  {% empty %}
+    <p><b>댓글이 없어요..</b></p>
+  {% endfor %}
+  <hr>
+  {% if request.user.is_authenticated %}
+    <form action="{% url 'community:create_comment' review.pk %}" method="POST">
+      {% csrf_token %}
+      {{ comment_form }}
+      <input type="submit">
+    </form>
+  {% else %}
+    <a href="{% url 'accounts:login' %}">[댓글을 작성하려면 로그인하세요.]</a>
+  {% endif %}
+  <a href="{% url 'community:index' %}">[back]</a>
+{% endblock  %}
+
+{% block script %}
+  <script>
+    const forms = document.querySelectorAll('.like-form')
+    const csrf_token = document.querySelector('[name=csrfmiddlewaretoken]').value
+    forms.forEach(form => {
+      form.addEventListener('submit', function (event) {
+        event.preventDefault()
+        const reviewId = event.target.dataset.reviewId
+        axios({
+          method: 'post',
+          url: `http://127.0.0.1:8000/community/${reviewId}/like/`,
+          headers: {'X-CSRFToken': csrf_token},
+        })
+        .then(response => {
+          const count = response.data.count
+          const liked = response.data.liked
+          const likeButton = document.querySelector(`#like-${reviewId}`)
+          const likeCount = document.querySelector(`#like-count-${reviewId}`)
+          if (liked === true) {
+            likeButton.innerText = '좋아요 취소'
+          } else {
+            likeButton.innerText = '좋아요'
+          }
+          likeCount.innerText = count
+        })
+      })
+    })
+  </script>
+{% endblock %}
