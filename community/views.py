@@ -4,6 +4,7 @@ from .models import Review, Comment
 from .forms import ReviewForm, CommentForm
 from django.http import JsonResponse
 from movies.models import Movie
+from django.contrib.auth.decorators import login_required
 
 @require_GET
 def index(request):
@@ -31,7 +32,7 @@ def index(request):
     }
     return render(request, 'community/index.html', context)
 
-
+@login_required
 @require_http_methods(['GET', 'POST'])
 def create(request, movie_pk):
     if request.method == 'POST':

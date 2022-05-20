@@ -4,6 +4,7 @@ from .models import Gun
 from django.http import JsonResponse
 
 
+
 @require_GET
 def index(request):
     if request.GET.get('search_keyword'):

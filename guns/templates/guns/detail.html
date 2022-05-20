@@ -10,6 +10,10 @@
   <p>총 길이 : {{ gun.gun_length }}</p>
   <p>구경 : {{ gun.gun_caliber }}</p>
   <p>종류 : {{ gun.gun_type }}</p>
+  {% for related_movie in gun.related_movies.all %}
+  <img src={{ related.movie.poster_path }} alt="movie_poster">
+  <a href="{% url 'movies:detail' related_movie.pk%}">{{ related_movie.title }}</a>
+  {% endfor %}
   <form class="like-form" action="{% url 'guns:like' gun.pk %}" method="POST" class="d-inline" data-gun-id="{{ gun.pk }}">
     {% csrf_token %}
     {% if user in gun.like_users.all %}
@@ -19,6 +23,7 @@
     {% endif %}
   </form>
   <p><span id="like-count-{{ gun.pk }}">{{ gun.like_users.all|length }}</span> 명이 이 총을 좋아합니다.</p>
+  <a href="{% url 'guns:index' %}"><button>뒤로가기</button></a>
 {% endblock %}
 
 {% block script %}

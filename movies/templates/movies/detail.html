@@ -1,5 +1,7 @@
 {% extends 'base.html' %}
 
+{% load static %}
+
 {% block content %}
 
 <img style='width: 400px;' src="{{ movie.poster_path }}" alt="영화 이미지">
@@ -14,7 +16,11 @@
   </p>
   <p>영화 개봉일: {{ movie.release_date }}</p>
   <p>인기도: {{ movie.popularity }}</p>
-  <p>영화 평점: {{ movie.release_date }}</p>
+  <p>영화 평점: {{ movie.vote_average }}</p>
+  {% for related_gun in movie.related_guns.all %}
+  <img src="{% static related_gun.gun_image_path %}" alt="gun_image">
+  <a href="{% url 'guns:detail' related_gun.pk%}">{{ related_gun.gun_name }}</a>
+  {% endfor %}
   <a href="{% url 'community:create' movie.pk %}">New Review</a>
   <form class="like-form" action="{% url 'movies:like' movie.pk %}" method="POST" class="d-inline" data-movie-id="{{ movie.pk }}">
     {% csrf_token %}
@@ -25,6 +31,7 @@
     {% endif %}
   </form>
   <p><span id="like-count-{{ movie.pk }}">{{ movie.like_users.all|length }}</span> 명이 이 영화를 좋아합니다.</p>
+  <a href="{% url 'movies:index' %}"><button>뒤로가기</button></a>
 
 {% endblock %}
 

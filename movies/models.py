@@ -1,5 +1,6 @@
 from django.db import models
 from django.conf import settings
+from guns.models import Gun
 
 
 class Genre(models.Model):
@@ -19,6 +20,7 @@ class Movie(models.Model):
     poster_path = models.CharField(max_length=200)
     genres = models.ManyToManyField(Genre)
     like_users = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='like_movies', blank=True)
+    related_guns = models.ManyToManyField(Gun, related_name='related_movies', blank=True)
 
     def __str__(self):
         return self.title
