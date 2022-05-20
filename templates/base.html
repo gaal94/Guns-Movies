@@ -7,31 +7,27 @@
   <link rel="stylesheet" href="https://unpkg.com/flickity@2/dist/flickity.min.css">
   <title>Document</title>
 </head>
-<body style='background-color: #323D3F;'>
+<body class="text-white" style='background-color: #323D3F;'>
   <div>
     <nav class="position-sticky d-flex justify-content-between align-items-center" style="background-color: #141819; height: 80px;">
-      <div class='text-white'>{{ user.username }}</div>
-      
-      <div>
-        <p class='text-white'>A</p>
+      <div class="mx-3">
+        <a href="{% url 'accounts:profile' user.username %}" class="text-decoration-none text-white">{{ user.username }}</a>님, 안녕하세요!
       </div>
-      <div class='d-flex justify-content-evenly' style='width: 400px;'>
+      <div id="main_div">
+        <h1>Guns & Movies</h1>
+      </div>
+      <div class="d-flex justify-content-evenly" style="width: 400px;">
         {% if user.is_authenticated %}
         <form id="logout_form" action="{% url 'accounts:logout' %}" method="POST">
           {% csrf_token %}
-          <div id="logout_div" class='text-white'>Logout</div>
-          
+          <div id="logout_div">Logout</div>
         </form>
-        
-        {% comment %} <a href="{% url 'accounts:profile' user %}">내 프로필<a>
-        <a href="{% url 'accounts:update' %}">회원정보수정</a> {% endcomment %}
-        {% comment %} <a href="{% url 'accounts:signout' %}">회원탈퇴</a> {% endcomment %}
         
         {% else %}
         <a href="{% url 'accounts:signup' %}" class="text-decoration-none text-white">Signup</a>
         <a href="{% url 'accounts:login' %}" class="text-decoration-none text-white">Login</a>
-        {% endif %}
         
+        {% endif %}
         <a href="{% url 'guns:index'%}" class="text-decoration-none text-white">Gun</a>
         <a href="{% url 'movies:index'%}" class="text-decoration-none text-white">Movie</a>
         <a href="{% url 'community:index'%}" class="text-decoration-none text-white">Review</a>
@@ -42,22 +38,28 @@
     {% endblock %}
   </div>
 
-
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js" integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf" crossorigin="anonymous"></script>
   <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
   <script src="https://unpkg.com/flickity@2/dist/flickity.pkgd.min.js"></script>
   <script>
-
+    const mainDiv = document.querySelector('#main_div')
     const logoutDiv = document.querySelector('#logout_div')
+    mainDiv.addEventListener('click', function () {
+      window.location.href = "http://127.0.0.1:8000/main/"
+    })
     logoutDiv.addEventListener('click', function () {
-      console.log('aaa')
       const form = document.getElementById('logout_form')
       form.submit()
     })
-
   </script>
 
   {% block script %}
   {% endblock script %}
+
+  <style>
+    #main_div, #logout_div:hover {
+      cursor: pointer;
+    }
+  </style>
 </body>
 </html>

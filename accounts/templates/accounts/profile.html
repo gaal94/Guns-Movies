@@ -1,9 +1,9 @@
 {% extends 'base.html' %}
 
 {% block content %}
-  <h1>{{ person.username }}의 프로필 페이지</h1>
+  <h1 class="mx-3">{{ person.username }}님의 프로필 페이지</h1>
   {% with followings=person.followings.all followers=person.followers.all %}
-    <div>
+    <div class="mx-3">
       <div>
         팔로잉 : {{ followings|length }} / 팔로워 : <span id="follow-count">{{ followers|length }}</span>
       </div>
@@ -19,36 +19,40 @@
           </form>
         </div>
       {% endif %}
-      <p>가입일 : {{ user.date_joined }}</p>
-      <h2>좋아요한 영화 목록 ({{ user.like_movies.all|length }})</h2>
+      <div>가입일 : {{ user.date_joined }}</div>
+      <div>
+        <a href="{% url 'accounts:update' %}"><button>회원정보 수정</button></a>
+        <a href="{% url 'accounts:signout' %}"><button>회원 탈퇴</button></a>
+      </div>
+      <h2>좋아요한 영화 ({{ user.like_movies.all|length }})</h2>
       <ul>
         {% for movie in user.like_movies.all %}
           <li><a href="{% url 'movies:detail' movie.pk %}">{{ movie.title }}</li></a>
         {% endfor %}
       </ul>
       <hr>
-      <h2>좋아요한 총 목록 ({{ user.like_guns.all|length }})</h2>
+      <h2>좋아요한 총 ({{ user.like_guns.all|length }})</h2>
       <ul>
         {% for gun in user.like_guns.all %}
           <li><a href="{% url 'guns:detail' gun.pk %}">{{ gun.gun_name }}</li></a>
         {% endfor %}
       </ul>
       <hr>
-      <h2>좋아요한 리뷰 목록 ({{ user.like_reviews.all|length }})</h2>
+      <h2>좋아요한 리뷰 ({{ user.like_reviews.all|length }})</h2>
       <ul>
         {% for review in user.like_reviews.all %}
           <li><a href="{% url 'community:detail' review.pk %}">{{ review.title }}</li></a>
         {% endfor %}
       </ul>
       <hr>
-      <h2>작성한 리뷰 목록 ({{ user.review_set.all|length }})</h2>
+      <h2>작성한 리뷰 ({{ user.review_set.all|length }})</h2>
       <ul>
         {% for review in user.review_set.all %}
           <li><a href="{% url 'community:detail' review.pk %}">{{ review.title }}</li></a>
         {% endfor %}
       </ul>
       <hr>
-      <h2>작성한 댓글 목록 ({{ user.comment_set.all|length }})</h2>
+      <h2>작성한 댓글 ({{ user.comment_set.all|length }})</h2>
       <ul>
         {% for comment in user.comment_set.all %}
           <li><a href="{% url 'community:detail' comment.review.pk %}">{{ comment.content }}</li></a>

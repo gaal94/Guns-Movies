@@ -5,6 +5,7 @@
   <h3>{{ review.pk }} 번째 글</h3>
   <hr>
   <p>제목: {{ review.title }}</p>
+  <p>작성자: <a href="{% url 'accounts:profile' review.user.username %}">{{ review.user.username }}</a></p>
   <p>영화 제목: {{ review.movie_title }}</p>
   <p>내용: {{ review.content }}</p>
   <p>평점: {{ review.rank }}</p>
