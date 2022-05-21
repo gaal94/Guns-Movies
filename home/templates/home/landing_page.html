@@ -5,14 +5,78 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Document</title>
+  
 </head>
 <body>
-  <h1>CLICK TO ENTER</h1>
+  <img id="gunshot" src="http://www.freepngimg.com/thumb/bullet%20hole/3-bullet-shot-hole-png-image-thumb.png" alt="test">
+  <div class='message'>
+    <h1>CLICK</h1>
+    <h1>TO ENTER</h1>
+  </div>
+  <div class='title'>
+    <h2>guns and movies</h2>
+  </div>
+  
 </body>
 </html>
 
+<style>
+  body {
+    background-color: #6c9baf;
+  }
+
+  .message {
+    position: absolute;
+    top: 50%;
+    left: 5%;
+    transform: translate(0, -50%);
+  }
+
+  .message h1 {
+    margin: 0;
+    color: #323d3f;
+    font-size: 10rem;    
+  }
+
+  .title {
+    position: absolute;
+    top: 95%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+
+  .title h2 {
+    color: white;
+  }
+
+  img{
+    position: absolute;
+    display: none;
+  }
+
+</style>
+
+
 <script>
-  document.addEventListener('click', function() {
+  {% comment %} document.addEventListener('click', function() {
     window.location.href = "http://127.0.0.1:8000/main/"
-  })
+  }) {% endcomment %}
+
+  window.onclick = function (event) {
+
+    'use strict';
+    var element = document.getElementById('gunshot').cloneNode();
+    // shotSound; 총 소리 넣으려면 clonenode 뒤에 , 붙이고 앞에 코드 추가하면 됨
+    document.body.appendChild(element);
+    element.style.display = 'inline';
+    element.style.left = event.clientX - (element.offsetWidth / 2) + 'px';
+    element.style.top = event.clientY - (element.offsetHeight / 2) + 'px';
+    // 탄환자국 이펙트가 보이고 일정 시간 뒤에 페이지 넘기기
+    setTimeout(()=> window.location.href = "http://127.0.0.1:8000/main/", 500);
+    
+    // 총 소리 소스, 소리 넣으려면 주석 풀면 됨
+    // shotSound = new Audio();
+    // shotSound.src = 'http://soundbible.com/mp3/9_mm_gunshot-mike-koenig-123.mp3';
+    // shotSound.play();
+  };
 </script>
