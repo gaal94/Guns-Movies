@@ -35,6 +35,7 @@ INSTALLED_APPS = [
     'community',
     'movies',
     'guns',
+    'home',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',

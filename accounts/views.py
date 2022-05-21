@@ -13,14 +13,14 @@ from django.contrib.auth.hashers import check_password
 @require_http_methods(['GET', 'POST'])
 def signup(request):
     if request.user.is_authenticated:
-        return redirect('community:index')
+        return redirect('home:main')
 
     if request.method == 'POST':
         form = CustomUserCreationForm(request.POST)
         if form.is_valid():               
             user = form.save()
             auth_login(request, user)
-            return redirect('community:index')
+            return redirect('home:main')
     else:
         form = CustomUserCreationForm()
     context = {
@@ -46,13 +46,13 @@ def signout(request):
 @require_http_methods(['GET', 'POST'])
 def login(request):
     if request.user.is_authenticated:
-        return redirect('community:index')
+        return redirect('home:main')
 
     if request.method == 'POST':
         form = AuthenticationForm(request, request.POST)
         if form.is_valid():
             auth_login(request, form.get_user())
-            return redirect(request.GET.get('next') or 'community:index')
+            return redirect(request.GET.get('next') or 'home:main')
     else:
         form = AuthenticationForm()
     context = {
@@ -64,7 +64,7 @@ def login(request):
 @require_POST
 def logout(request):
     auth_logout(request)
-    return redirect('community:index')
+    return redirect('home:main')
 
 
 @login_required

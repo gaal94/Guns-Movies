@@ -6,26 +6,34 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6" crossorigin="anonymous">
   <link rel="stylesheet" href="https://unpkg.com/flickity@2/dist/flickity.min.css">
   <title>Document</title>
+  {% block style %}
+  {% endblock style %}
 </head>
 <body class="text-white" style='background-color: #323D3F;'>
   <div>
     <nav class="position-sticky d-flex justify-content-between align-items-center" style="background-color: #141819; height: 80px;">
       <div class="mx-3">
-        <a href="{% url 'accounts:profile' user.username %}" class="text-decoration-none text-white">{{ user.username }}</a>님, 안녕하세요!
+        {% if user.is_authenticated %}
+          <a href="{% url 'accounts:profile' user.username %}" class="text-decoration-none text-white">{{ user.username }}</a>님, 안녕하세요!
+          {% if user.is_superuser %}
+            <a href="{% url 'movies:db' %}" class="text-decoration-none text-white mx-3">DB 채우기</a>
+          {% endif %}
+        {% else %}
+          <a href="{% url 'accounts:signup' %}" class="text-decoration-none text-white">Signup</a>
+        {% endif %}
       </div>
       <div id="main_div">
         <h1>Guns & Movies</h1>
       </div>
       <div class="d-flex justify-content-evenly" style="width: 400px;">
         {% if user.is_authenticated %}
-        <form id="logout_form" action="{% url 'accounts:logout' %}" method="POST">
-          {% csrf_token %}
-          <div id="logout_div">Logout</div>
-        </form>
+          <form id="logout_form" action="{% url 'accounts:logout' %}" method="POST">
+            {% csrf_token %}
+            <div id="logout_div">Logout</div>
+          </form>
         
         {% else %}
-        <a href="{% url 'accounts:signup' %}" class="text-decoration-none text-white">Signup</a>
-        <a href="{% url 'accounts:login' %}" class="text-decoration-none text-white">Login</a>
+          <a href="{% url 'accounts:login' %}" class="text-decoration-none text-white">Login</a>
         
         {% endif %}
         <a href="{% url 'guns:index'%}" class="text-decoration-none text-white">Gun</a>

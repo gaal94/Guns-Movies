@@ -3,36 +3,43 @@
 {% load static %}
 
 {% block content %}
-
-<img style='width: 400px;' src="{{ movie.poster_path }}" alt="영화 이미지">
-
-  <h1>니가 선택한 영화</h1>
-
-  <h2>영화 제목: {{ movie.title }}</h2>
-  <p>장르:
-    {% for genre in movie.genres.all %}
-      {{genre}}
+  <div class="m-3">
+    <img style='width: 400px;' src="{{ movie.poster_path }}" alt="{{ movie.title }}">
+    <h2>영화 제목: {{ movie.title }}</h2>
+    <p>장르:
+      {% for genre in movie.genres.all %}
+        {{ genre }}
+      {% endfor %}
+    </p>
+    <p>영화 개봉일: {{ movie.release_date }}</p>
+    <p>인기도: {{ movie.popularity }}</p>
+    <p>영화 평점: {{ movie.vote_average }}</p>
+    <p>영화 줄거리: {{ movie.overview }}</p>
+    {% for related_gun in movie.related_guns.all %}
+    <img src="{% static related_gun.gun_image_path %}" alt="gun_image">
+    <a href="{% url 'guns:detail' related_gun.pk%}">{{ related_gun.gun_name }}</a>
     {% endfor %}
-  </p>
-  <p>영화 개봉일: {{ movie.release_date }}</p>
-  <p>인기도: {{ movie.popularity }}</p>
-  <p>영화 평점: {{ movie.vote_average }}</p>
-  {% for related_gun in movie.related_guns.all %}
-  <img src="{% static related_gun.gun_image_path %}" alt="gun_image">
-  <a href="{% url 'guns:detail' related_gun.pk%}">{{ related_gun.gun_name }}</a>
-  {% endfor %}
-  <a href="{% url 'community:create' movie.pk %}">New Review</a>
-  <form class="like-form" action="{% url 'movies:like' movie.pk %}" method="POST" class="d-inline" data-movie-id="{{ movie.pk }}">
-    {% csrf_token %}
-    {% if user in movie.like_users.all %}
-      <button id="like-{{ movie.pk }}">좋아요 취소</button>
-    {% else %}
-      <button id="like-{{ movie.pk }}">좋아요</button>
+    <form class="like-form" action="{% url 'movies:like' movie.pk %}" method="POST" class="d-inline" data-movie-id="{{ movie.pk }}">
+      {% csrf_token %}
+      {% if user in movie.like_users.all %}
+        <button id="like-{{ movie.pk }}">좋아요 취소</button>
+      {% else %}
+        <button id="like-{{ movie.pk }}">좋아요</button>
+      {% endif %}
+    </form>
+    <p><span id="like-count-{{ movie.pk }}">{{ movie.like_users.all|length }}</span> 명이 이 영화를 좋아합니다.</p>
+    {% if user.is_superuser %}
+      <a href="{% url 'movies:update' movie.title %}"><button>영화 정보 수정</button></a>
     {% endif %}
-  </form>
-  <p><span id="like-count-{{ movie.pk }}">{{ movie.like_users.all|length }}</span> 명이 이 영화를 좋아합니다.</p>
-  <a href="{% url 'movies:index' %}"><button>뒤로가기</button></a>
-
+    <a href="{% url 'community:create' movie.pk %}"><button>영화 리뷰 작성</button></a>
+    <a href="{% url 'movies:index' %}"><button>뒤로가기</button></a>
+    {% if user.is_superuser %}
+      <form action="" method="POST">
+        {% csrf_token %}
+        <button onclick="return confirm('정말 삭제하시겠습니까?')">영화 삭제</button>
+      </form>
+    {% endif %}
+  </div>
 {% endblock %}
 
 {% block script %}

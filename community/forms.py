@@ -9,7 +9,6 @@ class ReviewForm(forms.ModelForm):
         fields = ['title', 'rank', 'content']
         
 
-
 class CommentForm(forms.ModelForm):
 
     class Meta:

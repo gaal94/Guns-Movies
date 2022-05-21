@@ -1,38 +1,39 @@
 {% extends 'base.html' %}
 
 {% block content %}
-  <h1>Movies</h1>
-  <form action="{% url 'movies:index' %}">
-    <p>검색
-      <select name="search_type" id="search_type">
-        <option value="search_by_title">제목</option>
-        <option value="search_by_genre">장르</option>
-      </select>
-      <input type="text" name="search_keyword"><button>검색</button></p>
-  </form>
-  <div class="container">
-    <div class="row gx-2 gy-2">
-      {% for movie in movies %}
-        <div class="card text-dark col-4 p-2 m-1 border-dark border-5" style="width: 18rem;">
-          <a href="{% url 'movies:detail' movie.pk %}"><img class="card-img-top" src="{{ movie.poster_path }}" alt="{{ movie.title }}"></a>
-          <div class="card-body">
-            <h5 class="card-title">영화 제목: {{ movie.title }}</h5>
-            <p class="card-text">줄거리: {{ movie.overview }}</p>
-            <form class="like-form" action="{% url 'movies:like' movie.pk %}" method="POST" class="d-inline" data-movie-id="{{ movie.pk }}">
-              {% csrf_token %}
-              {% if user in movie.like_users.all %}
-                <button id="like-{{ movie.pk }}">좋아요 취소</button>
-              {% else %}
-                <button id="like-{{ movie.pk }}">좋아요</button>
-              {% endif %}
-            </form>
-            <p><span id="like-count-{{ movie.pk }}">{{ movie.like_users.all|length }}</span> 명이 이 영화를 좋아합니다.</p>
+  <div class="m-3">
+    <h1>Movies</h1>
+    <form action="{% url 'movies:index' %}">
+      <p>검색
+        <select name="search_type" id="search_type">
+          <option value="search_by_title">제목</option>
+          <option value="search_by_genre">장르</option>
+        </select>
+        <input type="text" name="search_keyword"><button>검색</button></p>
+    </form>
+    <div class="container">
+      <div class="row gx-2 gy-2">
+        {% for movie in movies %}
+          <div class="card text-dark col-4 p-2 m-1 border-dark border-5" style="width: 18rem;">
+            <a href="{% url 'movies:detail' movie.pk %}"><img class="card-img-top" src="{{ movie.poster_path }}" alt="{{ movie.title }}"></a>
+            <div class="card-body">
+              <h5 class="card-title">영화 제목: {{ movie.title }}</h5>
+              <p class="card-text">줄거리: {{ movie.overview }}</p>
+              <form class="like-form" action="{% url 'movies:like' movie.pk %}" method="POST" class="d-inline" data-movie-id="{{ movie.pk }}">
+                {% csrf_token %}
+                {% if user in movie.like_users.all %}
+                  <button id="like-{{ movie.pk }}">좋아요 취소</button>
+                {% else %}
+                  <button id="like-{{ movie.pk }}">좋아요</button>
+                {% endif %}
+              </form>
+              <p><span id="like-count-{{ movie.pk }}">{{ movie.like_users.all|length }}</span> 명이 이 영화를 좋아합니다.</p>
+            </div>
           </div>
-        </div>
-      {% endfor %}
+        {% endfor %}
+      </div>
     </div>
   </div>
-  
 {% endblock %}
 
 {% block script %}
