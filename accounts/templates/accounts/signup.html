@@ -1,12 +1,20 @@
 {% extends 'base.html' %}
 
 {% block content %}
-  <div class="mx-3">
-    <h1>회원가입</h1>
-    <form action="" method="POST">
-      {% csrf_token %}
-      {{ form.as_p }}
-      <input type="submit">
-    </form>
+  <div style='margin-top: 100px;'>
+    <div class="container mr-0 p-0 d-flex justify-content-center">
+      <div class='row d-flex align-content-between' style='width: 800px; height: 500px; border: solid 0.2em white;' >
+        <div class="p-0 mx-3">
+          <h1 class='col-12 d-block text-center my-5'>회원가입</h1>
+          <form action="" method="POST">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <div class='d-flex justify-content-center'>
+              <input type="submit" style='width: 60px; height: 35px; margin-top: 20px;'>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
   </div>
 {% endblock  %}
