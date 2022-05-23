@@ -2,11 +2,21 @@
 
 {% block content %}
   <h1>DB 채우기</h1>
-  <form action="">
-    <p>TMDB 영화 제목
-      <input type="text" name="search_keyword"><button>검색</button>
-    </p>
-  </form>
+  <div>
+    <div>
+      <form action="">
+        <p>TMDB 영화 제목
+          <input type="text" name="search_keyword"><button>검색</button>
+        </p>
+      </form>
+    </div>
+    <div>
+      <form action="{% url 'movies:gundb' %}" method="POST">
+        {% csrf_token %}
+        <button>총기 DB 갱신</button>
+      </form>
+    </div>
+  </div>
   <hr>
   {% for movie in data.results %}
     <img style='width: 400px;' src="https://image.tmdb.org/t/p/w500{{ movie.poster_path }}" alt="{{ movie.title }}">
@@ -23,8 +33,9 @@
       <p>인기도: <input type="text" value="{{ movie.popularity }}" name="popularity" class="border-0 text-white bg-transparent p-0" size="30" readonly></p>
       <p>영화 평점: <input type="text" value="{{ movie.vote_average }}" name="vote_average" class="border-0 text-white bg-transparent p-0" size="30" readonly></p>
       <p>영화 줄거리: <input type="text" value="{{ movie.overview }}" name="overview" class="border-0 text-white bg-transparent p-0" size="200" readonly></p>
-      <input type="text" value="{{ movie.vote_count }}" name="vote_count" class="border-0 text-white bg-transparent p-0" size="30" hidden>
-      <input type="text" value="https://image.tmdb.org/t/p/w500{{ movie.poster_path }}" name="poster_path" class="border-0 text-white bg-transparent p-0" size="30" hidden>
+      <input type="text" value="{{ movie.vote_count }}" name="vote_count" size="30" hidden>
+      <input type="text" value="https://image.tmdb.org/t/p/w500{{ movie.poster_path }}" name="poster_path" size="30" hidden>
+      <input type="text" value="{{ movie.original_title }}" name="original_title" hidden>
       {% if movie.title in movie_titles %}
         <a href="{% url 'movies:update' movie.title %}"><button>영화 정보 수정</button></a>
       {% else %}

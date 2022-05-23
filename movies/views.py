@@ -5,6 +5,8 @@ from .models import Movie, Genre
 from django.http import JsonResponse
 from .forms import MovieForm
 import requests
+from guns.models import Gun
+from bs4 import BeautifulSoup
 
 
 @require_safe
@@ -74,6 +76,7 @@ def db(request):
             movie.vote_average = request.POST.get('vote_average')
             movie.overview = request.POST.get('overview')
             movie.poster_path = request.POST.get('poster_path')
+            movie.original_title = request.POST.get('original_title')
             movie.save()
             genre_ids = request.POST.get('genre_ids')
             for genre_id in genre_ids[1:-1].split(', '):
@@ -109,6 +112,37 @@ def db(request):
                 return render(request, 'movies/db.html')
         else:
             print('not superuser')
+
+
+@login_required
+@require_POST
+def gundb(request):
+    if request.user.is_superuser:
+        movies = Movie.objects.all()
+        guns = Gun.objects.all()
+        for movie in movies:
+            BASE_URL = 'https://api.themoviedb.org/3'
+            path = '/search/movie'
+            params = {
+                'api_key': '05752707a030a1c74935741bb5d3e4e3',
+                'region': 'KR',
+                'language': 'ko',
+                'query': movie.original_title,
+            }
+            response = requests.get(BASE_URL+path, params=params)
+            data = response.json()
+            title = '_'.join(data['results'][0]['original_title'].split(' '))
+            url = 'http://www.imfdb.org/wiki/' + title
+            page = requests.get(url)
+            soup = BeautifulSoup(page.text, "html.parser")
+            elements = soup.select('span.toctext')
+            for gun in guns:
+                for element in elements:
+                    if gun.gun_name in str(element):
+                        movie.related_guns.add(gun)
+                        break
+    else:
+        print('not superuser')
 
 
 @login_required

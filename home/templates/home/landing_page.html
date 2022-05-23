@@ -71,7 +71,7 @@
   window.onclick = function (event) {
 
     'use strict';
-    var element = document.getElementById('gunshot').cloneNode();
+    var element = document.getElementById('gunshot').cloneNode(), shotSound;
     // shotSound; 총 소리 넣으려면 clonenode 뒤에 , 붙이고 앞에 코드 추가하면 됨
     document.body.appendChild(element);
     element.style.display = 'inline';
@@ -81,8 +81,9 @@
     setTimeout(()=> window.location.href = "http://127.0.0.1:8000/main/", 500);
     
     // 총 소리 소스, 소리 넣으려면 주석 풀면 됨
-    // shotSound = new Audio();
-    // shotSound.src = 'http://soundbible.com/mp3/9_mm_gunshot-mike-koenig-123.mp3';
-    // shotSound.play();
+    shotSound = new Audio();
+    shotSound.src = 'http://soundbible.com/mp3/9_mm_gunshot-mike-koenig-123.mp3';
+    shotSound.volume = 0.1
+    shotSound.play();
   };
 </script>

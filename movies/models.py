@@ -18,6 +18,7 @@ class Movie(models.Model):
     vote_average = models.FloatField()
     overview = models.TextField()
     poster_path = models.CharField(max_length=200)
+    original_title = models.CharField(max_length=100, null=True)
     genres = models.ManyToManyField(Genre, blank=True)
     like_users = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='like_movies', blank=True)
     related_guns = models.ManyToManyField(Gun, related_name='related_movies', blank=True)
