@@ -82,7 +82,7 @@ def db(request):
             for genre_id in genre_ids[1:-1].split(', '):
                 genre = get_object_or_404(Genre, pk=genre_id)
                 movie.genres.add(genre)
-            return redirect('movies:update', movie.title)
+            return render(request, 'movies/db.html')
         else:
             print('not superuser')
     else:
@@ -141,6 +141,7 @@ def gundb(request):
                     if gun.gun_name in str(element):
                         movie.related_guns.add(gun)
                         break
+            return redirect('movies:index')
     else:
         print('not superuser')
 
