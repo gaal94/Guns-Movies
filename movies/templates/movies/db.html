@@ -11,9 +11,9 @@
       </form>
     </div>
     <div>
-      <form action="{% url 'movies:gundb' %}" method="POST">
+      <form action="{% url 'movies:moviedb' %}" method="POST">
         {% csrf_token %}
-        <button>총기 DB 갱신</button>
+        <button>전체 DB 갱신</button>
       </form>
     </div>
   </div>

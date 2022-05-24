@@ -230,8 +230,8 @@
   <p>구경 : {{ gun.gun_caliber }}</p>
   <p>종류 : {{ gun.gun_type }}</p>
   {% for related_movie in gun.related_movies.all %}
-  <img src={{ related.movie.poster_path }} alt="movie_poster">
-  <a href="{% url 'movies:detail' related_movie.pk%}">{{ related_movie.title }}</a>
+    <img src={{ related_movie.poster_path }} alt="movie_poster">
+    <a href="{% url 'movies:detail' related_movie.pk %}">{{ related_movie.title }}</a>
   {% endfor %}
   <div id="main-content">
     <div>
