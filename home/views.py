@@ -7,3 +7,10 @@ def landing_page(request):
 
 def main(request):
     return render(request, 'home/main.html')
+
+def gunbti(request):
+    return render(request, 'home/gunbti.html')
+
+def results(request, count):
+    
+    return render(request, 'home/results.html')

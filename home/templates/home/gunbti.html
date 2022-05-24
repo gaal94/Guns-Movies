@@ -1,0 +1,245 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+{% block style %}
+  <style>
+    .countField {
+      width: 700px;
+      margin-top: 200px;
+    }
+
+    .bookshelf {
+      width: 700px;
+      position: absolute;
+      left: 930px;
+      bottom: 150px;
+      z-index: 1;
+    }
+
+    .info-div {
+      top: 100px;
+      margin-top: 50px;
+      background-color: red;
+    }
+
+    .countNum {
+      {% comment %} position: absolute; {% endcomment %}
+      {% comment %} left: 1000px; {% endcomment %}
+      
+      font-size: 2rem;
+      margin-bottom: 0px;
+      
+    }
+
+    .can {
+      width: 160px;
+      height: 250px;
+      
+    }
+
+
+    .explosion {
+      display: none;
+      width: 100px;
+      z-index: 3;
+    }
+
+    .ul1 {
+      list-style-type: none;
+      position: absolute;
+      z-index: 2;
+      left: 1000px;
+      top: 410px;
+    }
+    
+    .ul2 {
+      list-style-type: none;
+      position: absolute;
+      z-index: 2;
+      left: 1000px;
+      top: 570px;
+    }
+
+    .ul3 {
+      list-style-type: none;
+      position: absolute;
+      z-index: 2;
+      left: 1000px;
+      top: 730px;
+    }
+
+    .ul4 {
+      list-style-type: none;
+      position: absolute;
+      z-index: 2;
+      left: 1000px;
+      top: 880px;
+    }
+
+    li {
+      float: left;
+    }
+
+    .disappear {
+      opacity: 0;
+    }
+
+
+
+
+
+  </style>
+
+{% endblock style %}
+
+{% block content %}
+
+<img id='explosion' class='explosion' src="{% static 'home/explosion3.png' %}" alt="explosion_image">
+
+<div>
+  <div id='info-div' class='info-div d-flex justify-content-center'>
+    <p id='countNum' class='countNum'>COUNT : 0</p>
+    <button id='startButton' class='d-block'>START</button>
+  </div>
+</div>
+
+<div>
+
+  <div id='countField' class='countField'>
+    <div>
+      <ul class='ul1'>
+        <li ><img id='can1' class='can disappear' src="{% static 'home/pixel_can2.png' %}" alt="can_image"></li>
+        <li ><img id='can2' class='can disappear' src="{% static 'home/pixel_can2.png' %}" alt="can_image"></li>
+        <li ><img id='can3' class='can disappear' src="{% static 'home/pixel_can2.png' %}" alt="can_image"></li>
+      </ul>
+      <ul class='ul2'>
+        <li ><img id='can4' class='can disappear' src="{% static 'home/pixel_can2.png' %}" alt="can_image"></li>
+        <li ><img id='can5' class='can disappear' src="{% static 'home/pixel_can2.png' %}" alt="can_image"></li>
+        <li ><img id='can6' class='can disappear' src="{% static 'home/pixel_can2.png' %}" alt="can_image"></li>
+      </ul>
+      <ul class='ul3'>
+        <li ><img id='can7' class='can disappear' src="{% static 'home/pixel_can2.png' %}" alt="can_image"></li>
+        <li ><img id='can8' class='can disappear' src="{% static 'home/pixel_can2.png' %}" alt="can_image"></li>
+        <li ><img id='can9' class='can disappear' src="{% static 'home/pixel_can2.png' %}" alt="can_image"></li>
+      </ul>
+      <ul class='ul4'>
+        <li ><img id='can10' class='can disappear' src="{% static 'home/pixel_can2.png' %}" alt="can_image"></li>
+        <li ><img id='can11' class='can disappear' src="{% static 'home/pixel_can2.png' %}" alt="can_image"></li>
+        <li ><img id='can12' class='can disappear' src="{% static 'home/pixel_can2.png' %}" alt="can_image"></li>
+      </ul>
+    </div>
+    <img id='bookshelf' class='bookshelf' src="{% static 'home/bookshelf.png' %}" alt="bookshelf_image">
+    
+  </div>
+</div>
+
+{% endblock content %}
+
+
+
+{% block script %}
+  <script>
+    let count = 0
+    const countNum = document.querySelector('#countNum')
+    const cans = document.querySelectorAll('.can')
+    const countField = document.querySelector('#countField')
+    const explosion = document.getElementById('explosion')
+
+    cans.forEach(can => {
+      can.addEventListener('click', event => {
+        if (!can.classList.contains('disappear')) {
+          console.log('HIT')
+          count ++
+          countNum.innerText = 'COUNT: ' + count
+          can.classList.add('disappear')
+        }
+      })
+    })
+
+    {% comment %} cans.forEach(can => {can.addEventListener('click', function () {
+      console.log('HIT')
+      count ++
+      countNum.innerText = 'COUNT: ' + count
+    })}) {% endcomment %}
+
+    countField.onclick = function (event) {
+      var element = explosion.cloneNode(), shotSound;
+      document.body.appendChild(element);
+      element.style.display = 'block';
+      element.style.position = 'absolute';
+      element.style.left = event.clientX - 50 + 'px';
+      element.style.top = event.clientY - 50 + 'px';
+      setTimeout(()=>document.body.removeChild(element), 500)
+
+      shotSound = new Audio();
+      shotSound.src = 'http://soundbible.com/mp3/9_mm_gunshot-mike-koenig-123.mp3';
+      shotSound.volume = 0.1
+      shotSound.play();
+      
+    }
+
+    function randomTime() {
+      return 800
+      // Math.round(Math.random() * (1.1 - 0.1) + 0.1) //시간 문제 0, 1
+    }
+
+
+    
+    function randomCan () {
+      let numbers = []
+      cans.forEach(can => {
+        if (can.classList.contains('disappear')) {
+          
+          numbers.push(Number(can.id.split('can')[1]))
+        }
+      })
+      
+      
+      return _.sample(numbers)
+      
+
+      //randomNum = _.random(1, 12)
+      //canNum = document.getElementById(`can${randomNum}`)
+      //return canNum
+      // canNum.style.display = 'inline'
+    }
+
+    
+    function showCan() {
+      const time = randomTime()
+      const randumCan = randomCan()
+      console.log(randumCan)
+      const canShow = document.querySelector(`#can${randumCan}`)
+      console.log(canShow)
+      // if (!canShow.classList.contains('disappear')) {
+      //  console.log('same can')
+      //  return showCan()
+      // }
+
+      setTimeout(() => {
+        if (randumCan !== undefined) {
+        canShow.classList.remove('disappear')
+      }
+        if (!timeUp) showCan();
+      }, time)
+    }
+
+    let timeUp = false;
+    function startGame() {
+      timeUp = false
+      showCan()
+      setTimeout(() => {
+        timeUp = true;
+        setTimeout(() => window.location.href = `http://127.0.0.1:8000/results/${count}`, 500)
+    }, 10000)
+    }
+
+    const startButton = document.querySelector('#startButton')
+    startButton.onclick = function () {
+      startGame()
+    }
+
+  </script>
+
+{% endblock script %}
