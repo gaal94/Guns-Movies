@@ -216,83 +216,176 @@
         transform: scale(1);
       }
     }
+    .page-link {
+      color: black;
+    }
   </style>
 {% endblock style %}
 
 {% block content %}
   <div class="m-3">
     <h1>Movies</h1>
-    <form action="{% url 'movies:index' %}">
-      <p>검색
+    <form action="{% url 'movies:index' %}?typeof=title_asc&page=1">
         <select name="search_type" id="search_type">
-          <option value="search_by_title">제목</option>
+          <option value="search_by_title">제목(한글)</option>
+          <option value="search_by_original_title">제목(영어)</option>
           <option value="search_by_genre">장르</option>
         </select>
         <input type="text" name="search_keyword"><button>검색</button></p>
     </form>
-    <div class="container">
-      <div class="row gx-2 gy-2">
-        {% for movie in movies %}
-          <div class="card text-dark col-4 p-2 m-1 border-dark border-5" style="width: 18rem;">
-            <a href="{% url 'movies:detail' movie.pk %}"><img class="card-img-top" src="{{ movie.poster_path }}" alt="{{ movie.title }}"></a>
-            <div class="card-body">
-              <div id="main-content">
-                <div>
-                  <input type="checkbox" id="checkbox-{{ movie.pk }}" class="checkbox" data-movie-id="{{ movie.pk }}"
-                  {% if user in movie.like_users.all %}
-                    checked
-                  {% endif %}
-                  />
-                  <label for="checkbox-{{ movie.pk }}">
-                    <svg id="heart-svg" viewBox="467 392 58 57" xmlns="http://www.w3.org/2000/svg">
-                      <g id="Group" fill="none" fill-rule="evenodd" transform="translate(467 392)">
-                        <path d="M29.144 20.773c-.063-.13-4.227-8.67-11.44-2.59C7.63 28.795 28.94 43.256 29.143 43.394c.204-.138 21.513-14.6 11.44-25.213-7.214-6.08-11.377 2.46-11.44 2.59z" id="heart" fill="#AAB8C2"/>
-                        <circle id="main-circ" fill="#E2264D" opacity="0" cx="29.5" cy="29.5" r="1.5"/>
-              
-                        <g id="grp7" opacity="0" transform="translate(7 6)">
-                          <circle id="oval1" fill="#9CD8C3" cx="2" cy="6" r="2"/>
-                          <circle id="oval2" fill="#8CE8C3" cx="5" cy="2" r="2"/>
+    <div class="d-flex">
+      <div class="list-group">
+        <a href="{% url 'movies:index' %}?typeof=title_asc" class="list-group-item list-group-item-action
+        {% if typeof == 'title_asc' %}
+          active
+        {% endif %}
+        ">영화 제목 A → Z</a>
+        <a href="{% url 'movies:index' %}?typeof=title_des" class="list-group-item list-group-item-action
+        {% if typeof == 'title_des' %}
+          active
+        {% endif %}
+        ">영화 제목 Z → A</a>
+        <a href="{% url 'movies:index' %}?typeof=release_date_des" class="list-group-item list-group-item-action
+        {% if typeof == 'release_date_des' %}
+          active
+        {% endif %}
+        ">출시일 현재 → 과거</a>
+        <a href="{% url 'movies:index' %}?typeof=release_date_asc" class="list-group-item list-group-item-action
+        {% if typeof == 'release_date_asc' %}
+          active
+        {% endif %}
+        ">출시일 과거 → 현재</a>
+        <a href="{% url 'movies:index' %}?typeof=popularity_des" class="list-group-item list-group-item-action
+        {% if typeof == 'popularity_des' %}
+          active
+        {% endif %}
+        ">인기도 높음 → 낮음</a>
+        <a href="{% url 'movies:index' %}?typeof=popularity_asc" class="list-group-item list-group-item-action
+        {% if typeof == 'popularity_asc' %}
+          active
+        {% endif %}
+        ">인기도 낮음 → 높음</a>
+        <a href="{% url 'movies:index' %}?typeof=vote_average_des" class="list-group-item list-group-item-action
+        {% if typeof == 'vote_average_des' %}
+          active
+        {% endif %}
+        ">평점 높음 → 낮음</a>
+        <a href="{% url 'movies:index' %}?typeof=vote_average_asc" class="list-group-item list-group-item-action
+        {% if typeof == 'vote_average_asc' %}
+          active
+        {% endif %}
+        ">평점 낮음 → 높음</a>
+        <a href="{% url 'movies:index' %}?typeof=like_users_des" class="list-group-item list-group-item-action
+        {% if typeof == 'like_users_des' %}
+          active
+        {% endif %}
+        ">좋아요 많음 → 적음</a>
+        <a href="{% url 'movies:index' %}?typeof=like_users_asc" class="list-group-item list-group-item-action
+        {% if typeof == 'like_users_asc' %}
+          active
+        {% endif %}
+        ">좋아요 적음 → 많음</a>
+      </div>
+      <div class="container">
+        <div class="row gx-2 gy-2">
+          {% for movie in movies %}
+            <div class="card text-dark col-3 p-2 m-1 border-dark border-5" style="width: 18rem;">
+              <a href="{% url 'movies:detail' movie.pk %}"><img class="card-img-top" src="{{ movie.poster_path }}" alt="{{ movie.title }}" style="height: 393px;"></a>
+              <div class="card-body">
+                <div id="main-content" class="d-flex">
+                  <div>
+                    <input type="checkbox" id="checkbox-{{ movie.pk }}" class="checkbox" data-movie-id="{{ movie.pk }}"
+                    {% if user in movie.like_users.all %}
+                      checked
+                    {% endif %}
+                    />
+                    <label for="checkbox-{{ movie.pk }}">
+                      <svg id="heart-svg" viewBox="467 392 58 57" xmlns="http://www.w3.org/2000/svg">
+                        <g id="Group" fill="none" fill-rule="evenodd" transform="translate(467 392)">
+                          <path d="M29.144 20.773c-.063-.13-4.227-8.67-11.44-2.59C7.63 28.795 28.94 43.256 29.143 43.394c.204-.138 21.513-14.6 11.44-25.213-7.214-6.08-11.377 2.46-11.44 2.59z" id="heart" fill="#AAB8C2"/>
+                          <circle id="main-circ" fill="#E2264D" opacity="0" cx="29.5" cy="29.5" r="1.5"/>
+                
+                          <g id="grp7" opacity="0" transform="translate(7 6)">
+                            <circle id="oval1" fill="#9CD8C3" cx="2" cy="6" r="2"/>
+                            <circle id="oval2" fill="#8CE8C3" cx="5" cy="2" r="2"/>
+                          </g>
+                
+                          <g id="grp6" opacity="0" transform="translate(0 28)">
+                            <circle id="oval1" fill="#CC8EF5" cx="2" cy="7" r="2"/>
+                            <circle id="oval2" fill="#91D2FA" cx="3" cy="2" r="2"/>
+                          </g>
+                
+                          <g id="grp3" opacity="0" transform="translate(52 28)">
+                            <circle id="oval2" fill="#9CD8C3" cx="2" cy="7" r="2"/>
+                            <circle id="oval1" fill="#8CE8C3" cx="4" cy="2" r="2"/>
+                          </g>
+                
+                          <g id="grp2" opacity="0" transform="translate(44 6)">
+                            <circle id="oval2" fill="#CC8EF5" cx="5" cy="6" r="2"/>
+                            <circle id="oval1" fill="#CC8EF5" cx="2" cy="2" r="2"/>
+                          </g>
+                
+                          <g id="grp5" opacity="0" transform="translate(14 50)">
+                            <circle id="oval1" fill="#91D2FA" cx="6" cy="5" r="2"/>
+                            <circle id="oval2" fill="#91D2FA" cx="2" cy="2" r="2"/>
+                          </g>
+                
+                          <g id="grp4" opacity="0" transform="translate(35 50)">
+                            <circle id="oval1" fill="#F48EA7" cx="6" cy="5" r="2"/>
+                            <circle id="oval2" fill="#F48EA7" cx="2" cy="2" r="2"/>
+                          </g>
+                
+                          <g id="grp1" opacity="0" transform="translate(24)">
+                            <circle id="oval1" fill="#9FC7FA" cx="2.5" cy="3" r="2"/>
+                            <circle id="oval2" fill="#9FC7FA" cx="7.5" cy="2" r="2"/>
+                          </g>
                         </g>
-              
-                        <g id="grp6" opacity="0" transform="translate(0 28)">
-                          <circle id="oval1" fill="#CC8EF5" cx="2" cy="7" r="2"/>
-                          <circle id="oval2" fill="#91D2FA" cx="3" cy="2" r="2"/>
-                        </g>
-              
-                        <g id="grp3" opacity="0" transform="translate(52 28)">
-                          <circle id="oval2" fill="#9CD8C3" cx="2" cy="7" r="2"/>
-                          <circle id="oval1" fill="#8CE8C3" cx="4" cy="2" r="2"/>
-                        </g>
-              
-                        <g id="grp2" opacity="0" transform="translate(44 6)">
-                          <circle id="oval2" fill="#CC8EF5" cx="5" cy="6" r="2"/>
-                          <circle id="oval1" fill="#CC8EF5" cx="2" cy="2" r="2"/>
-                        </g>
-              
-                        <g id="grp5" opacity="0" transform="translate(14 50)">
-                          <circle id="oval1" fill="#91D2FA" cx="6" cy="5" r="2"/>
-                          <circle id="oval2" fill="#91D2FA" cx="2" cy="2" r="2"/>
-                        </g>
-              
-                        <g id="grp4" opacity="0" transform="translate(35 50)">
-                          <circle id="oval1" fill="#F48EA7" cx="6" cy="5" r="2"/>
-                          <circle id="oval2" fill="#F48EA7" cx="2" cy="2" r="2"/>
-                        </g>
-              
-                        <g id="grp1" opacity="0" transform="translate(24)">
-                          <circle id="oval1" fill="#9FC7FA" cx="2.5" cy="3" r="2"/>
-                          <circle id="oval2" fill="#9FC7FA" cx="7.5" cy="2" r="2"/>
-                        </g>
-                      </g>
-                    </svg>
-                  </label>
+                      </svg>
+                    </label>
+                  </div>
+                  <p id="like-count-{{ movie.pk }}" class="mt-auto">{{ movie.like_users.all|length }}</p>
                 </div>
               </div>
-              <p><span id="like-count-{{ movie.pk }}">{{ movie.like_users.all|length }}</span> 명이 이 영화를 좋아합니다.</p>
             </div>
-          </div>
-        {% endfor %}
+          {% endfor %}
+        </div>
       </div>
+    </div>
+    <div class="d-flex justify-content-center my-3">
+      <nav aria-label="Page navigation example">
+        <ul class="pagination">
+          <li class="page-item 
+            {% if pagelist == 1 %}
+              disabled
+            {% endif %}
+          ">
+            <a class="page-link" href="{% url 'movies:index' %}?typeof={{ typeof }}&pagelist={{ pagelist|add:-1 }}&page={{ page|add:-10 }}&search_keyword={{ search_keyword }}&search_type={{ search_type }}" aria-label="Previous">
+              <span aria-hidden="true">&laquo;</span>
+              <span class="sr-only">Previous</span>
+            </a>
+          </li>
+          {% for pagenumber in pagenumbers %}
+            <li class="page-item 
+              {% if pagenumber == page %}
+                active
+              {% endif %}
+              {% if pagenumber not in valid_pages %}
+                disabled
+              {% endif %}
+            "><a class="page-link" href="{% url 'movies:index' %}?typeof={{ typeof }}&pagelist={{ pagelist }}&page={{ pagenumber }}&search_keyword={{ search_keyword }}&search_type={{ search_type }}">{{ pagenumber }}</a></li>
+          {% endfor %}
+          <li class="page-item 
+            {% if pagelist not in valid_pagelists %}
+              disabled
+            {% endif %}
+          ">
+            <a class="page-link" href="{% url 'movies:index' %}?typeof={{ typeof }}&pagelist={{ pagelist|add:1 }}&page={{ page|add:10 }}&search_keyword={{ search_keyword }}&search_type={{ search_type }}" aria-label="Next">
+              <span aria-hidden="true">&raquo;</span>
+              <span class="sr-only">Next</span>
+            </a>
+          </li>
+        </ul>
+      </nav>
     </div>
   </div>
 {% endblock %}
