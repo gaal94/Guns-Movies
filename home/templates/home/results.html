@@ -1,9 +1,94 @@
 {% extends 'base.html' %}
+{% load static %}
+
+{% block style %}
+<style>
+  .gun-info-box {
+    width: 800px;
+    border: solid 0.5em white;
+  }
+
+  .movie-info-box {
+    width: 800px;
+    border: solid 0.5em white;
+    
+  }
+
+  .your-gun-title {
+    font-size: 2rem;
+    margin-top: 20px;
+    margin-bottom: 0px;
+    font-weight: bolder;
+  }
+
+  .recom-movie-title {
+    font-size: 2rem;
+    margin: 20px 0px;
+    
+    font-weight: bolder;
+  }
+
+  .count-text {
+    color: #e41120;
+    font-size: 40px;
+  }
+</style>
+{% endblock style %}
+
 
 {% block content %}
+<div>
+  <div class='text-center mt-5'>
+    <span class='count-text'>{{ count }}</span><span style='font-size: 40px;'>개의 타겟적중</span>
+    {% if your_gun == 'Machine Gun' %}
+      <h1>무자비한 파괴가 보고 싶은 당신에게</h1>
+      <h1>{{ your_gun }}이 나오는 영화를 추천합니다.</h1>
+    {% elif your_gun == 'Assault Rifle' %}
+      <h1>전술적 교전을 보고 싶은 당신에게</h1>
+      <h1>{{ your_gun }}이 나오는 영화를 추천합니다.</h1>
+    {% elif your_gun == 'Submachine Gun' %}
+      <h1>빠르고 현란한 액션을 보고 싶은 당신에게</h1>
+      <h1>{{ your_gun }}이 나오는 영화를 추천합니다.</h1>
+    {% elif your_gun == 'Pistol' %}
+      <h1>총기의 알파이자 오메가</h1>
+      <h1>{{ your_gun }}이 나오는 영화를 추천합니다.</h1>
+    {% elif your_gun == 'Shotgun' %}
+      <h1>압도적인 무력을 보고 싶은 당신에게</h1>
+      <h1>{{ your_gun }}이 나오는 영화를 추천합니다.</h1>
+    {% elif your_gun == 'Sniper Rifle' %}
+      <h1>고독한 한방을 보고 싶은 당신에게</h1>
+      <h1>{{ your_gun }}이 나오는 영화를 추천합니다.</h1>
+    {% endif %}
+  </div>
+  <div class='d-flex justify-content-evenly mt-5'>
+    <div class='gun-info-box'>
+      <p class='your-gun-title text-center'>{{ your_gun }}</p>
+      <div class='d-flex justify-content-center'>
+        <div>
+          {% for gun in guns %}
+          <div class='my-4'>
+            <a href="{% url 'guns:detail' gun.pk %}" class='text-decoration-none'><p class='text-center text-white'>{{ gun.gun_name }}</p></a>
+            <div class='d-flex justify-content-center'>
+              <a href="{% url 'guns:detail' gun.pk %}"><img src="{% static gun.gun_image_path %}" alt="{{ gun.gun_name }} img"></a>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
 
+    <div class='movie-info-box'>
+      <p class='recom-movie-title text-center'>추천 영화</p>
+      <a href="{% url 'movies:detail' movie.pk %}" class='d-flex justify-content-center'><img src="{{ movie.poster_path }}" alt="movie_poster"></a>
+      <a href="{% url 'movies:detail' movie.pk %}" class='text-decoration-none'><h1 class='my-3 text-white text-center'>{{ movie.title }}</h1></a>
+    </div>
+  </div>
 
-
-
+  {% comment %} <div>
+    {% for movie in movies %}
+    <p>{{ movie.title }}</p>
+    {% endfor %}
+  </div> {% endcomment %}
+</div>
 
 {% endblock content %}

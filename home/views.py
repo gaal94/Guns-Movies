@@ -1,4 +1,6 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_list_or_404
+from movies.models import Movie
+from guns.models import Gun
 
 
 def landing_page(request):
@@ -12,5 +14,33 @@ def gunbti(request):
     return render(request, 'home/gunbti.html')
 
 def results(request, count):
+    if count >= 12:
+        your_gun = 'Machine Gun'
+    elif count >= 10:
+        your_gun = 'Assault Rifle'
+    elif count >= 8:
+        your_gun = 'Submachine Gun'
+    elif count >= 4:
+        your_gun = 'Pistol'
+    elif count >= 2:
+        your_gun = 'Shotgun'
+    elif count >= 0:
+        your_gun = 'Sniper Rifle'
     
-    return render(request, 'home/results.html')
+    guns = Gun.objects.filter(gun_type__type_name__icontains=your_gun)
+    #  movies = Movie.objects.filter(related_guns__gun_name__icontains = guns)
+    movies = Movie.objects.filter(related_guns__gun_type__type_name__icontains=your_gun)
+    movie = movies.order_by('?')[0]
+    print(movie)
+    
+    
+
+    context = {
+        'your_gun' : your_gun,
+        'count' : count,
+        'movies' : movies,
+        'movie' : movie,
+        'guns' : guns,
+    }
+    
+    return render(request, 'home/results.html', context)

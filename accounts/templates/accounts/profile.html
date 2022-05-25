@@ -1,65 +1,123 @@
 {% extends 'base.html' %}
 
+{% block style %}
+  <style>
+    h2 {
+      text-align: center;
+      border: solid 0.2em white;
+    }
+
+    li {
+      color: white;
+    }
+
+    a {
+      text-decoration: none;
+      color: white;
+    }
+
+    .ul-div {
+      min-height: 300px;
+      border: solid 0.15em white;
+    }
+  </style>
+
+
+{% endblock style %}
+
 {% block content %}
-  <h1 class="mx-3">{{ person.username }}님의 프로필 페이지</h1>
-  {% with followings=person.followings.all followers=person.followers.all %}
-    <div class="mx-3">
-      <div>
-        팔로잉 : {{ followings|length }} / 팔로워 : <span id="follow-count">{{ followers|length }}</span>
-      </div>
-      {% if request.user != person %}
+  <div class='container mt-5'>
+    <div class='row'>
+      <div class='col-8 d-flex justify-content-between'>
+        <h1 class="mx-3">{{ person.username }}님의 프로필 페이지</h1>
+        {% with followings=person.followings.all followers=person.followers.all %}
         <div>
-          <form id="follow-form" action="{% url 'accounts:follow' person.pk %}" method="POST" data-person-id="{{ person.pk }}">
-            {% csrf_token %}
-            {% if request.user in followers %}
-              <button id="followBtn">언팔로우</button>
-            {% else %}
-              <button id="followBtn">팔로우</button>
+          <div class='d-flex justify-content-between'>
+            <div class='d-flex justify-content-between'>
+              <span>팔로잉 : {{ followings|length }}</span><span>/</span> 팔로워 : <span id="follow-count">{{ followers|length }}</span>
+            </div>
+            {% if request.user != person %}
+              <div>
+                <form id="follow-form" action="{% url 'accounts:follow' person.pk %}" method="POST" data-person-id="{{ person.pk }}">
+                  {% csrf_token %}
+                  {% if request.user in followers %}
+                    <button id="followBtn">언팔로우</button>
+                  {% else %}
+                    <button id="followBtn">팔로우</button>
+                  {% endif %}
+                </form>
+              </div>
             {% endif %}
-          </form>
+          </div>
+          <div>
+            가입일 : {{ user.date_joined }}
+          </div>
         </div>
-      {% endif %}
-      <div>가입일 : {{ user.date_joined }}</div>
-      <div>
+      </div>
+      <div class='col-4 d-flex justify-content-end align-items-center'>
         <a href="{% url 'accounts:update' %}"><button>회원정보 수정</button></a>
         <a href="{% url 'accounts:signout' %}"><button>회원 탈퇴</button></a>
       </div>
-      <h2>좋아요한 영화 ({{ user.like_movies.all|length }})</h2>
-      <ul>
-        {% for movie in user.like_movies.all %}
-          <li><a href="{% url 'movies:detail' movie.pk %}">{{ movie.title }}</li></a>
-        {% endfor %}
-      </ul>
-      <hr>
-      <h2>좋아요한 총 ({{ user.like_guns.all|length }})</h2>
-      <ul>
-        {% for gun in user.like_guns.all %}
-          <li><a href="{% url 'guns:detail' gun.pk %}">{{ gun.gun_name }}</li></a>
-        {% endfor %}
-      </ul>
-      <hr>
-      <h2>좋아요한 리뷰 ({{ user.like_reviews.all|length }})</h2>
-      <ul>
-        {% for review in user.like_reviews.all %}
-          <li><a href="{% url 'community:detail' review.pk %}">{{ review.title }}</li></a>
-        {% endfor %}
-      </ul>
-      <hr>
-      <h2>작성한 리뷰 ({{ user.review_set.all|length }})</h2>
-      <ul>
-        {% for review in user.review_set.all %}
-          <li><a href="{% url 'community:detail' review.pk %}">{{ review.title }}</li></a>
-        {% endfor %}
-      </ul>
-      <hr>
-      <h2>작성한 댓글 ({{ user.comment_set.all|length }})</h2>
-      <ul>
-        {% for comment in user.comment_set.all %}
-          <li><a href="{% url 'community:detail' comment.review.pk %}">{{ comment.content }}</li></a>
-        {% endfor %}
-      </ul>
-      <hr>
     </div>
+  </div>
+  <div class='container mt-4'>
+    <div class='row'>
+      <div class='col-4'>
+        <h2>좋아요한 영화 ({{ user.like_movies.all|length }})</h2>
+        <div class='ul-div card-body'>
+          <ul>
+            {% for movie in user.like_movies.all %}
+              <li><a href="{% url 'movies:detail' movie.pk %}">{{ movie.title }}</li></a>
+            {% endfor %}
+          </ul>
+        </div>
+      </div>
+      
+      <div class='col-4'>
+        <h2>좋아요한 총 ({{ user.like_guns.all|length }})</h2>
+        <div class='ul-div card-body'>
+          <ul>
+            {% for gun in user.like_guns.all %}
+              <li><a href="{% url 'guns:detail' gun.pk %}">{{ gun.gun_name }}</li></a>
+            {% endfor %}
+          </ul>
+        </div>
+      </div>
+      <div class='col-4'>
+        <h2>좋아요한 리뷰 ({{ user.like_reviews.all|length }})</h2>
+        <div class='ul-div card-body'>
+          <ul>
+            {% for review in user.like_reviews.all %}
+              <li><a href="{% url 'community:detail' review.pk %}">{{ review.title }}</li></a>
+            {% endfor %}
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class='row'>
+      <div class='col-6'>
+        <h2>작성한 리뷰 ({{ user.review_set.all|length }})</h2>
+        <div class='ul-div card-body'>
+          <ul>
+            {% for review in user.review_set.all %}
+              <li><a href="{% url 'community:detail' review.pk %}">{{ review.title }}</li></a>
+            {% endfor %}
+          </ul>
+        </div>
+      </div>
+      <div class='col-6'>
+        <h2>작성한 댓글 ({{ user.comment_set.all|length }})</h2>
+        <div class='ul-div card-body'>
+          <ul>
+            {% for comment in user.comment_set.all %}
+              <li><a href="{% url 'community:detail' comment.review.pk %}">{{ comment.content|truncatechars:20}}...</li></a>
+            {% endfor %}
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+    
   {% endwith %}
 {% endblock %}
 
