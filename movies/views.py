@@ -175,50 +175,98 @@ def moviedb(request):
             page = requests.get(url)
             soup = BeautifulSoup(page.text, "html.parser")
             elements = soup.select('span.toctext')
+            count = 0
             for element in elements:
-                if gun.gun_name == element.text:
-                    for span in element.parent.parent.select('span.toctext'):
-                        if span.text == 'Film':
-                            for tr in soup.select_one('span#' + span.parent['href'][1:]).parent.find_next_sibling('table').select('i > a'):
-                                if Movie.objects.filter(original_title=tr.text).exists():
-                                    movies = get_list_or_404(Movie, original_title=tr.text)
-                                    for movie in movies:
-                                        movie.related_guns.add(gun)
-                                else:
-                                    BASE_URL = 'https://api.themoviedb.org/3'
-                                    path = '/search/movie'
-                                    params = {
-                                        'api_key': '05752707a030a1c74935741bb5d3e4e3',
-                                        'region': 'KR',
-                                        'language': 'ko',
-                                        'query': tr.text,
-                                    }
-                                    response = requests.get(BASE_URL+path, params=params)
-                                    data = response.json()
-                                    if data['results']:
-                                        form = MovieForm()
-                                        movie = form.save(commit=False)
-                                        movie.title = data['results'][0].get('title')
-                                        if data['results'][0].get('release_date'):
-                                            movie.release_date = data['results'][0].get('release_date')
-                                        if data['results'][0].get('popularity'):
-                                            movie.popularity = data['results'][0].get('popularity')
-                                        if data['results'][0].get('vote_count'):
-                                            movie.vote_count = data['results'][0].get('vote_count')
-                                        if data['results'][0].get('vote_average'):
-                                            movie.vote_average = data['results'][0].get('vote_average')
-                                        if data['results'][0].get('overview'):
-                                            movie.overview = data['results'][0].get('overview')
-                                        if data['results'][0].get('poster_path'):
-                                            movie.poster_path = 'https://image.tmdb.org/t/p/w500' + data['results'][0].get('poster_path')
-                                        if data['results'][0].get('original_title'):
-                                            movie.original_title = data['results'][0].get('original_title')
-                                        movie.save()
-                                        genre_ids = data['results'][0]['genre_ids']
-                                        for genre_id in genre_ids:
-                                            genre = get_object_or_404(Genre, pk=genre_id)
-                                            movie.genres.add(genre)
-                                        movie.related_guns.add(gun)
+                if element.text == 'Film':
+                    count += 1
+            if count > 1:
+                for element in elements:
+                    if gun.gun_name == element.text:
+                        for span in element.parent.parent.select('span.toctext'):
+                            if span.text == 'Film':
+                                for tr in soup.select_one('span#' + span.parent['href'][1:]).parent.find_next_sibling('table').select('i > a'):
+                                    if Movie.objects.filter(original_title=tr.text).exists():
+                                        movies = get_list_or_404(Movie, original_title=tr.text)
+                                        for movie in movies:
+                                            movie.related_guns.add(gun)
+                                    else:
+                                        BASE_URL = 'https://api.themoviedb.org/3'
+                                        path = '/search/movie'
+                                        params = {
+                                            'api_key': '05752707a030a1c74935741bb5d3e4e3',
+                                            'region': 'KR',
+                                            'language': 'ko',
+                                            'query': tr.text,
+                                        }
+                                        response = requests.get(BASE_URL+path, params=params)
+                                        data = response.json()
+                                        if data['results']:
+                                            form = MovieForm()
+                                            movie = form.save(commit=False)
+                                            movie.title = data['results'][0].get('title')
+                                            if data['results'][0].get('release_date'):
+                                                movie.release_date = data['results'][0].get('release_date')
+                                            if data['results'][0].get('popularity'):
+                                                movie.popularity = data['results'][0].get('popularity')
+                                            if data['results'][0].get('vote_count'):
+                                                movie.vote_count = data['results'][0].get('vote_count')
+                                            if data['results'][0].get('vote_average'):
+                                                movie.vote_average = data['results'][0].get('vote_average')
+                                            if data['results'][0].get('overview'):
+                                                movie.overview = data['results'][0].get('overview')
+                                            if data['results'][0].get('poster_path'):
+                                                movie.poster_path = 'https://image.tmdb.org/t/p/w500' + data['results'][0].get('poster_path')
+                                            if data['results'][0].get('original_title'):
+                                                movie.original_title = data['results'][0].get('original_title')
+                                            movie.save()
+                                            genre_ids = data['results'][0]['genre_ids']
+                                            for genre_id in genre_ids:
+                                                genre = get_object_or_404(Genre, pk=genre_id)
+                                                movie.genres.add(genre)
+                                            movie.related_guns.add(gun)
+            elif count == 1:
+                for element in elements:
+                    if element.text == 'Film':
+                        for tr in soup.select_one('span#' + element.parent['href'][1:]).parent.find_next_sibling('table').select('i > a'):
+                            if Movie.objects.filter(original_title=tr.text).exists():
+                                movies = get_list_or_404(Movie, original_title=tr.text)
+                                for movie in movies:
+                                    movie.related_guns.add(gun)
+                            else:
+                                BASE_URL = 'https://api.themoviedb.org/3'
+                                path = '/search/movie'
+                                params = {
+                                    'api_key': '05752707a030a1c74935741bb5d3e4e3',
+                                    'region': 'KR',
+                                    'language': 'ko',
+                                    'query': tr.text,
+                                }
+                                response = requests.get(BASE_URL+path, params=params)
+                                data = response.json()
+                                if data['results']:
+                                    form = MovieForm()
+                                    movie = form.save(commit=False)
+                                    movie.title = data['results'][0].get('title')
+                                    if data['results'][0].get('release_date'):
+                                        movie.release_date = data['results'][0].get('release_date')
+                                    if data['results'][0].get('popularity'):
+                                        movie.popularity = data['results'][0].get('popularity')
+                                    if data['results'][0].get('vote_count'):
+                                        movie.vote_count = data['results'][0].get('vote_count')
+                                    if data['results'][0].get('vote_average'):
+                                        movie.vote_average = data['results'][0].get('vote_average')
+                                    if data['results'][0].get('overview'):
+                                        movie.overview = data['results'][0].get('overview')
+                                    if data['results'][0].get('poster_path'):
+                                        movie.poster_path = 'https://image.tmdb.org/t/p/w500' + data['results'][0].get('poster_path')
+                                    if data['results'][0].get('original_title'):
+                                        movie.original_title = data['results'][0].get('original_title')
+                                    movie.save()
+                                    genre_ids = data['results'][0]['genre_ids']
+                                    for genre_id in genre_ids:
+                                        genre = get_object_or_404(Genre, pk=genre_id)
+                                        movie.genres.add(genre)
+                                    movie.related_guns.add(gun)
         movies = Movie.objects.order_by('title')
         for i in range(len(movies) - 1):
             if movies[i].title == movies[i + 1].title:
