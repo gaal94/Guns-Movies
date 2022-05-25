@@ -11,9 +11,8 @@
 
     .bookshelf {
       width: 700px;
-      position: absolute;
-      left: 930px;
-      bottom: 150px;
+      position: relative;
+      bottom: 1170px;
       z-index: 1;
     }
 
@@ -45,36 +44,42 @@
       z-index: 3;
     }
 
+    ul.clearfixed::after {
+      display:block;
+      content: '';
+      clear: both;
+    }
+
     .ul1 {
       list-style-type: none;
-      position: absolute;
+      position: relative;
       z-index: 2;
-      left: 1000px;
-      top: 410px;
+      left: 80px;
+      
     }
     
     .ul2 {
       list-style-type: none;
-      position: absolute;
+      position: relative;
       z-index: 2;
-      left: 1000px;
-      top: 570px;
+      left: 80px;
+      bottom: 120px;
     }
 
     .ul3 {
       list-style-type: none;
-      position: absolute;
+      position: relative;
       z-index: 2;
-      left: 1000px;
-      top: 730px;
+      left: 80px;
+      bottom: 220px;
     }
 
     .ul4 {
       list-style-type: none;
-      position: absolute;
+      position: relative;
       z-index: 2;
-      left: 1000px;
-      top: 880px;
+      left: 80px;
+      bottom: 320px;
     }
 
     li {
@@ -104,33 +109,32 @@
   </div>
 </div>
 
-<div>
-
+<div class='d-flex justify-content-center'>
   <div id='countField' class='countField'>
     <div>
-      <ul class='ul1'>
+      {% comment %} disappear {% endcomment %}
+      <ul class='clearfixed ul1'> 
         <li ><img id='can1' class='can disappear' src="{% static 'home/pixel_can2.png' %}" alt="can_image"></li>
         <li ><img id='can2' class='can disappear' src="{% static 'home/pixel_can2.png' %}" alt="can_image"></li>
         <li ><img id='can3' class='can disappear' src="{% static 'home/pixel_can2.png' %}" alt="can_image"></li>
       </ul>
-      <ul class='ul2'>
+      <ul class='clearfixed ul2'>
         <li ><img id='can4' class='can disappear' src="{% static 'home/pixel_can2.png' %}" alt="can_image"></li>
         <li ><img id='can5' class='can disappear' src="{% static 'home/pixel_can2.png' %}" alt="can_image"></li>
         <li ><img id='can6' class='can disappear' src="{% static 'home/pixel_can2.png' %}" alt="can_image"></li>
       </ul>
-      <ul class='ul3'>
+      <ul class='clearfixed ul3'>
         <li ><img id='can7' class='can disappear' src="{% static 'home/pixel_can2.png' %}" alt="can_image"></li>
         <li ><img id='can8' class='can disappear' src="{% static 'home/pixel_can2.png' %}" alt="can_image"></li>
         <li ><img id='can9' class='can disappear' src="{% static 'home/pixel_can2.png' %}" alt="can_image"></li>
       </ul>
-      <ul class='ul4'>
+      <ul class='clearfixed ul4'>
         <li ><img id='can10' class='can disappear' src="{% static 'home/pixel_can2.png' %}" alt="can_image"></li>
         <li ><img id='can11' class='can disappear' src="{% static 'home/pixel_can2.png' %}" alt="can_image"></li>
         <li ><img id='can12' class='can disappear' src="{% static 'home/pixel_can2.png' %}" alt="can_image"></li>
       </ul>
+      <img id='bookshelf' class='bookshelf' src="{% static 'home/bookshelf.png' %}" alt="bookshelf_image">
     </div>
-    <img id='bookshelf' class='bookshelf' src="{% static 'home/bookshelf.png' %}" alt="bookshelf_image">
-    
   </div>
 </div>
 
