@@ -7,20 +7,71 @@ from .forms import MovieForm
 import requests
 from guns.models import Gun
 from bs4 import BeautifulSoup
+import math
 
 
 @require_safe
 def index(request):
-    if request.GET.get('search_keyword'):
-        search_keyword = request.GET.get('search_keyword')
-        if request.GET.get('search_type') == 'search_by_title':
-            movies = Movie.objects.filter(title__icontains=search_keyword)
-        elif request.GET.get('search_type') == 'search_by_genre':
-            movies = Movie.objects.filter(genres__name__icontains=search_keyword)
-    else:
+    search_keyword = request.GET.get('search_keyword')
+    search_type = request.GET.get('search_type')
+    if search_keyword == 'None' or not search_keyword:
         movies = Movie.objects.all()
+    else:
+        if search_type == 'search_by_title':
+            movies = Movie.objects.filter(title__icontains=search_keyword)
+        elif search_type == 'search_by_original_title':
+            movies = Movie.objects.filter(original_title__icontains=search_keyword)
+        elif search_type == 'search_by_genre':
+            movies = Movie.objects.filter(genres__name__icontains=search_keyword)
+    typeof = request.GET.get('typeof')
+    if typeof == 'None' or not typeof:
+        typeof = 'title_asc'
+    if typeof == 'title_asc':
+        movies = movies.order_by('title')
+    elif typeof == 'title_des':
+        movies = movies.order_by('-title')
+    elif typeof == 'release_date_asc':
+        movies = movies.order_by('release_date')
+    elif typeof == 'release_date_des':
+        movies = movies.order_by('-release_date')
+    elif typeof == 'popularity_asc':
+        movies = movies.order_by('popularity')
+    elif typeof == 'popularity_des':
+        movies = movies.order_by('-popularity')
+    elif typeof == 'vote_average_asc':
+        movies = movies.order_by('vote_average')
+    elif typeof == 'vote_average_des':
+        movies = movies.order_by('-vote_average')
+    elif typeof == 'like_users_asc':
+        movies = movies.order_by('like_users')
+    elif typeof == 'like_users_des':
+        movies = movies.order_by('-like_users')
+    pagelist = request.GET.get('pagelist')
+    if pagelist == 'None' or not pagelist:
+        pagelist = 1
+    else:
+        pagelist = int(pagelist)
+    pagenumbers = [i for i in range(10 * pagelist - 9, 10 * pagelist + 1)]
+    page = request.GET.get('page')
+    if page=='None' or not page:
+        page = 1
+    else:
+        page = int(page)
+    valid_page = math.ceil(len(movies) / 12)
+    valid_pages = [i for i in range(1, valid_page + 1)]
+    valid_pagelist = math.ceil(valid_page / 10)
+    valid_pagelists = [i for i in range(1, valid_pagelist)]
+    movies = movies[12 * (page - 1):12 * page]
     context = {
         'movies': movies,
+        'typeof': typeof,
+        'pagelist': pagelist,
+        'pagenumbers': pagenumbers,
+        'page': page,
+        'search_keyword': search_keyword,
+        'search_type': search_type,
+        'valid_pages': valid_pages,
+        'valid_pagelists' : valid_pagelists,
     }
     return render(request, 'movies/index.html', context)
 

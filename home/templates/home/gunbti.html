@@ -171,9 +171,10 @@
       var element = explosion.cloneNode(), shotSound;
       document.body.appendChild(element);
       element.style.display = 'block';
-      element.style.position = 'absolute';
+      element.style.position = 'fixed';
       element.style.left = event.clientX - 50 + 'px';
       element.style.top = event.clientY - 50 + 'px';
+      console.log(event.clientX, event.clientY)
       setTimeout(()=>document.body.removeChild(element), 500)
 
       shotSound = new Audio();
