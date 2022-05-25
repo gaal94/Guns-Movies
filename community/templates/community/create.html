@@ -1,12 +1,14 @@
 {% extends 'base.html' %}
 
 {% block content %}
-  <h1 class="text-center">CREATE</h1>
+  <h1 class="text-center">리뷰 작성</h1>
   <form action="" method="POST">
     {% csrf_token %}
-    {{ form.as_p }}
-    <input type="submit">
+    <p>리뷰 제목 : {{ form.title }}</p>
+    <p>리뷰 평점 : {{ form.rank }}</p>
+    <p>리뷰 내용 : {{ form.content }}</p>
+    <input type="submit" value="등록" class="btn btn-secondary">
   </form>
   <hr>
-  <a href="{% url 'community:index' %}">[back]</a>
+  <a href="{% url 'movies:detail' movie_pk %}"><button class="btn btn-primary">뒤로가기</button></a>
 {% endblock %}

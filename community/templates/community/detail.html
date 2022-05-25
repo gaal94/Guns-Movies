@@ -5,7 +5,7 @@
     svg {
       cursor: pointer;
       overflow: visible;
-      width: 60px;
+      width: 25px;
     }
     svg #heart {
       transform-origin: center;
@@ -220,105 +220,149 @@
 {% endblock style %}
 
 {% block content %}
-  <h2 class="text-center">DETAIL</h2>
-  <h3>{{ review.pk }} 번째 글</h3>
-  <hr>
-  <p>제목: {{ review.title }}</p>
-  <p>작성자: <a href="{% url 'accounts:profile' review.user.username %}">{{ review.user.username }}</a></p>
-  <p>영화 제목: {{ review.movie_title }}</p>
-  <p>내용: {{ review.content }}</p>
-  <p>평점: {{ review.rank }}</p>
-  <p>작성 시각: {{ review.created_at }}</p>
-  <p>수정 시각: {{ review.updated_at }}</p>
-  <div id="main-content">
+  <div class="m-3">
     <div>
-      <input type="checkbox" id="checkbox-{{ review.pk }}" class="checkbox" data-review-id="{{ review.pk }}"
-      {% if user in review.like_users.all %}
-        checked
-      {% endif %}
-      />
-      <label for="checkbox-{{ review.pk }}">
-        <svg id="heart-svg" viewBox="467 392 58 57" xmlns="http://www.w3.org/2000/svg">
-          <g id="Group" fill="none" fill-rule="evenodd" transform="translate(467 392)">
-            <path d="M29.144 20.773c-.063-.13-4.227-8.67-11.44-2.59C7.63 28.795 28.94 43.256 29.143 43.394c.204-.138 21.513-14.6 11.44-25.213-7.214-6.08-11.377 2.46-11.44 2.59z" id="heart" fill="#AAB8C2"/>
-            <circle id="main-circ" fill="#E2264D" opacity="0" cx="29.5" cy="29.5" r="1.5"/>
-  
-            <g id="grp7" opacity="0" transform="translate(7 6)">
-              <circle id="oval1" fill="#9CD8C3" cx="2" cy="6" r="2"/>
-              <circle id="oval2" fill="#8CE8C3" cx="5" cy="2" r="2"/>
-            </g>
-  
-            <g id="grp6" opacity="0" transform="translate(0 28)">
-              <circle id="oval1" fill="#CC8EF5" cx="2" cy="7" r="2"/>
-              <circle id="oval2" fill="#91D2FA" cx="3" cy="2" r="2"/>
-            </g>
-  
-            <g id="grp3" opacity="0" transform="translate(52 28)">
-              <circle id="oval2" fill="#9CD8C3" cx="2" cy="7" r="2"/>
-              <circle id="oval1" fill="#8CE8C3" cx="4" cy="2" r="2"/>
-            </g>
-  
-            <g id="grp2" opacity="0" transform="translate(44 6)">
-              <circle id="oval2" fill="#CC8EF5" cx="5" cy="6" r="2"/>
-              <circle id="oval1" fill="#CC8EF5" cx="2" cy="2" r="2"/>
-            </g>
-  
-            <g id="grp5" opacity="0" transform="translate(14 50)">
-              <circle id="oval1" fill="#91D2FA" cx="6" cy="5" r="2"/>
-              <circle id="oval2" fill="#91D2FA" cx="2" cy="2" r="2"/>
-            </g>
-  
-            <g id="grp4" opacity="0" transform="translate(35 50)">
-              <circle id="oval1" fill="#F48EA7" cx="6" cy="5" r="2"/>
-              <circle id="oval2" fill="#F48EA7" cx="2" cy="2" r="2"/>
-            </g>
-  
-            <g id="grp1" opacity="0" transform="translate(24)">
-              <circle id="oval1" fill="#9FC7FA" cx="2.5" cy="3" r="2"/>
-              <circle id="oval2" fill="#9FC7FA" cx="7.5" cy="2" r="2"/>
-            </g>
-          </g>
-        </svg>
-      </label>
+      <table class="table bg-white mx-auto mb-0" style="height: 0px; width: 750px;">
+        <thead style="background-color: #323D3F;">
+          <tr>
+            <th scope="col" style="border: 0; width: 100px;"></th>
+            <th scope="col" style="border: 0;"></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th scope="row" colspan="2" class="text-center" style="background-color: #323D3F; border: 0;"><img src="{{ review.movie_title.poster_path }}" alt="{{ review.movie_title.title }}" style="width: 300px;"></th>
+          </tr>
+          <tr>
+            <th scope="row" class="text-center bg-dark text-white" style="border: 0;">리뷰 제목</th>
+            <td>{{ review.title }}</td>
+          </tr>
+          <tr>
+            <th scope="row" class="text-center bg-dark text-white" style="border: 0;">영화 제목</th>
+            <td><a href="{% url 'movies:detail' review.movie_title.pk %}" class="text-dark">{{ review.movie_title }}</a></td>
+          </tr>
+          <tr>
+            <th scope="row" class="text-center bg-dark text-white" style="border: 0;">리뷰 평점</th>
+            <td>{{ review.rank }}</td>
+          </tr>
+          <tr>
+            <th scope="row" class="text-center bg-dark text-white" style="border: 0;">작성일</th>
+            <td>{{ review.created_at }}</td>
+          </tr>
+          <tr>
+            <th scope="row" class="text-center bg-dark text-white" style="border: 0;">작성자</th>
+            <td><a href="{% url 'accounts:profile' review.user.username %}" class="text-dark">{{ review.user.username }}</a></td>
+          </tr>
+          <tr>
+            <th scope="row" class="text-center bg-dark text-white" style="border: 0;">좋아요</th>
+            <td>
+              <div class="d-flex align-items-center">
+                <div id="main-content">
+                  <div>
+                    <input type="checkbox" id="checkbox-{{ review.pk }}" class="checkbox" data-review-id="{{ review.pk }}"
+                    {% if user in review.like_users.all %}
+                      checked
+                    {% endif %}
+                    />
+                    <label for="checkbox-{{ review.pk }}">
+                      <svg id="heart-svg" viewBox="467 392 58 57" xmlns="http://www.w3.org/2000/svg">
+                        <g id="Group" fill="none" fill-rule="evenodd" transform="translate(467 392)">
+                          <path d="M29.144 20.773c-.063-.13-4.227-8.67-11.44-2.59C7.63 28.795 28.94 43.256 29.143 43.394c.204-.138 21.513-14.6 11.44-25.213-7.214-6.08-11.377 2.46-11.44 2.59z" id="heart" fill="#AAB8C2"/>
+                          <circle id="main-circ" fill="#E2264D" opacity="0" cx="29.5" cy="29.5" r="1.5"/>
+                
+                          <g id="grp7" opacity="0" transform="translate(7 6)">
+                            <circle id="oval1" fill="#9CD8C3" cx="2" cy="6" r="2"/>
+                            <circle id="oval2" fill="#8CE8C3" cx="5" cy="2" r="2"/>
+                          </g>
+                
+                          <g id="grp6" opacity="0" transform="translate(0 28)">
+                            <circle id="oval1" fill="#CC8EF5" cx="2" cy="7" r="2"/>
+                            <circle id="oval2" fill="#91D2FA" cx="3" cy="2" r="2"/>
+                          </g>
+                
+                          <g id="grp3" opacity="0" transform="translate(52 28)">
+                            <circle id="oval2" fill="#9CD8C3" cx="2" cy="7" r="2"/>
+                            <circle id="oval1" fill="#8CE8C3" cx="4" cy="2" r="2"/>
+                          </g>
+                
+                          <g id="grp2" opacity="0" transform="translate(44 6)">
+                            <circle id="oval2" fill="#CC8EF5" cx="5" cy="6" r="2"/>
+                            <circle id="oval1" fill="#CC8EF5" cx="2" cy="2" r="2"/>
+                          </g>
+                
+                          <g id="grp5" opacity="0" transform="translate(14 50)">
+                            <circle id="oval1" fill="#91D2FA" cx="6" cy="5" r="2"/>
+                            <circle id="oval2" fill="#91D2FA" cx="2" cy="2" r="2"/>
+                          </g>
+                
+                          <g id="grp4" opacity="0" transform="translate(35 50)">
+                            <circle id="oval1" fill="#F48EA7" cx="6" cy="5" r="2"/>
+                            <circle id="oval2" fill="#F48EA7" cx="2" cy="2" r="2"/>
+                          </g>
+                
+                          <g id="grp1" opacity="0" transform="translate(24)">
+                            <circle id="oval1" fill="#9FC7FA" cx="2.5" cy="3" r="2"/>
+                            <circle id="oval2" fill="#9FC7FA" cx="7.5" cy="2" r="2"/>
+                          </g>
+                        </g>
+                      </svg>
+                    </label>
+                  </div>
+                </div>
+                <span id="like-count-{{ review.pk }}">{{ review.like_users.all|length }}</span>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <th scope="row" class="text-center bg-dark text-white" style="border: 0;">리뷰 내용</th>
+            <td style="height: 300px; display: block; overflow: auto;">{{ review.content }}</td>
+          </tr>
+          {% if review.user == request.user %}
+            <tr>
+              <th scope="row" class="text-center bg-dark" style="border: 0;"></th>
+              <td style="border: 0;">
+                <div class="d-flex justify-content-end">
+                  <a href="{% url 'community:update' review.pk %}"><button class="btn btn-success">리뷰 수정</button></a>
+                  <form action="" method="POST" class="mx-3">
+                    {% csrf_token %}
+                    <button class="btn btn-success">리뷰 삭제</button>
+                  </form>
+                </div>
+              </tdle=>
+            </tr>
+          {% endif %}
+        </tbody>
+      </table>
     </div>
+    
+    <hr>
+    <h4>댓글 ({{ comments|length }})</h4>
+    {% for comment in comments %}
+      <div class="d-flex my-1">
+        <span style="font-size: 20px;"><a href="{% url 'accounts:profile' comment.user.username %}" class="text-white">{{ comment.user }}</a> : {{ comment.content }}</span>
+        {% if comment.user == request.user %}
+          <form action="{% url 'community:delete_comment' review.pk comment.pk %}" method="POST" class="mx-2">
+            {% csrf_token %}  
+            <button class="btn btn-light" style="font-size: 12px;">삭제</button>
+          </form>
+        {% endif %}
+      </div>
+    {% empty %}
+      <p>첫 댓글을 작성해주세요!</p>
+    {% endfor %}
+    <hr>
+    {% if request.user.is_authenticated %}
+      <form action="{% url 'community:create_comment' review.pk %}" method="POST">
+        {% csrf_token %}
+        <span>댓글 : </span>
+        {{ comment_form.content }}
+        <input type="submit" value="등록" class="btn btn-light" style="font-size: 15px;">
+      </form>
+    {% else %}
+      <a href="{% url 'accounts:login' %}">[댓글을 작성하려면 로그인하세요.]</a>
+    {% endif %}
+    <a href="{% url 'community:index' %}"><button class="btn btn-primary my-2">뒤로가기</button></a>
   </div>
-  <p><span id="like-count-{{ review.pk }}">{{ review.like_users.all|length }}</span> 명이 이 글을 좋아합니다.</p>
-  {% if review.user == request.user %}
-    <a href="{% url 'community:update' review.pk %}">UPDATE</a>
-    <form action="" method="POST">
-      {% csrf_token %}
-      <button>DELETE</button>
-    </form>
-  {% endif %}
-  <hr>
-  <h4>댓글 목록</h4>
-  {% if comments|length %}
-    <p><b>{{ comments|length }}개의 댓글이 있습니다.</b></p>
-  {% endif %}
-  {% for comment in comments %}
-    <div>
-      {{ comment.user }} - {{ comment.content }}
-      {% if comment.user == request.user %}
-        <form action="{% url 'community:delete_comment' review.pk comment.pk %}" method="POST">
-          {% csrf_token %}
-          <button>DELETE</button>
-        </form>
-      {% endif %}
-    </div>
-  {% empty %}
-    <p><b>댓글이 없어요..</b></p>
-  {% endfor %}
-  <hr>
-  {% if request.user.is_authenticated %}
-    <form action="{% url 'community:create_comment' review.pk %}" method="POST">
-      {% csrf_token %}
-      {{ comment_form }}
-      <input type="submit">
-    </form>
-  {% else %}
-    <a href="{% url 'accounts:login' %}">[댓글을 작성하려면 로그인하세요.]</a>
-  {% endif %}
-  <a href="{% url 'community:index' %}">[back]</a>
 {% endblock  %}
 
 {% block script %}

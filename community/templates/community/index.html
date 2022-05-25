@@ -289,7 +289,7 @@
             <tr>
               <th scope="col" class="text-white text-center" style="width: 75px;">#</th>
               <th scope="col" class="text-white" style="width: 175px;">영화 제목</th>
-              <th scope="col" class="text-white">리뷰 제목</th>
+              <th scope="col" class="text-white" style="width: 200px;">리뷰 제목</th>
               <th scope="col" class="text-white text-center" style="width: 125px;">리뷰 평점</th>
               <th scope="col" class="text-white" style="width: 225px;">작성일</th>
               <th scope="col" class="text-white" style="width: 125px;">작성자</th>
@@ -301,7 +301,7 @@
               <tr>
                 <th scope="row" class="text-center">{{ review.pk }}</th>
                 <th><a href="{% url 'movies:detail' review.movie_title.pk %}" class="text-dark">{{ review.movie_title }}</a></th>
-                <th><a href="{% url 'community:detail' review.pk %}" class="text-dark">{{ review.title }}</a></th>
+                <th><a href="{% url 'community:detail' review.pk %}" class="text-dark">{{ review.title }}</a> ({{ review.comment_set.all|length }})</th>
                 <th class="text-center">{{ review.rank }}</th>
                 <th>{{ review.created_at }}</th>
                 <th><a href="{% url 'accounts:profile' review.user.username %}" class="text-dark">{{ review.user.username }}</a></th>
@@ -371,7 +371,7 @@
           <thead class="bg-dark">
             <tr>
               <th scope="col" class="text-white text-center" style="width: 75px;">#</th>
-              <th scope="col" class="text-white">댓글 내용</th>
+              <th scope="col" class="text-white" style="width: 300px;">댓글 내용</th>
               <th scope="col" class="text-white text-center" style="width: 225px;">작성일</th>
               <th scope="col" class="text-white" style="width: 125px;">작성자</th>
             </tr>
