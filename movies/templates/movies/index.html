@@ -224,15 +224,19 @@
 
 {% block content %}
   <div class="m-3">
-    <h1>Movies</h1>
-    <form action="{% url 'movies:index' %}?typeof=title_asc&page=1">
-        <select name="search_type" id="search_type">
-          <option value="search_by_title">제목(한글)</option>
-          <option value="search_by_original_title">제목(영어)</option>
-          <option value="search_by_genre">장르</option>
-        </select>
-        <input type="text" name="search_keyword"><button>검색</button></p>
-    </form>
+    <div class='text-center'>
+      <h1>Movies</h1>
+    </div>
+    <div class='d-flex justify-content-center'>
+      <form action="{% url 'movies:index' %}?typeof=title_asc&page=1">
+          <select name="search_type" id="search_type">
+            <option value="search_by_title">제목(한글)</option>
+            <option value="search_by_original_title">제목(영어)</option>
+            <option value="search_by_genre">장르</option>
+          </select>
+          <input type="text" name="search_keyword"><button>검색</button></p>
+      </form>
+    </div>
     <div class="d-flex">
       <div class="list-group">
         <a href="{% url 'movies:index' %}?typeof=title_asc" class="list-group-item list-group-item-action
@@ -292,7 +296,7 @@
             <div class="card text-dark col-3 p-2 m-1 border-dark border-5" style="width: 18rem;">
               <a href="{% url 'movies:detail' movie.pk %}"><img class="card-img-top" src="{{ movie.poster_path }}" alt="{{ movie.title }}" style="height: 393px;"></a>
               <div class="card-body">
-                <div id="main-content" class="d-flex">
+                <div id="main-content" class="d-flex justify-content-center">
                   <div>
                     <input type="checkbox" id="checkbox-{{ movie.pk }}" class="checkbox" data-movie-id="{{ movie.pk }}"
                     {% if user in movie.like_users.all %}

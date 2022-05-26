@@ -218,91 +218,172 @@
         transform: scale(1);
       }
     }
+
+    .inner-border {
+      border: solid 0.1em white;
+      text-align: center;
+    }
+
+    .movie-info {
+      border: solid 0.2em white;
+      margin-top: 80px;
+    }
+
+    .gun-card {
+      {% comment %} background-color: transparent; {% endcomment %}
+      margin: 0px 15px 15px 15px;
+    }
+
   </style>
 {% endblock style %}
 
 {% block content %}
-  <div class="m-3">
-    <img style='width: 400px;' src="{{ movie.poster_path }}" alt="{{ movie.title }}">
-    <h2>영화 제목: {{ movie.title }}</h2>
-    <p>장르:
-      {% for genre in movie.genres.all %}
-        {{ genre }}
-      {% endfor %}
-    </p>
-    <p>영화 개봉일: {{ movie.release_date }}</p>
-    <p>인기도: {{ movie.popularity }}</p>
-    <p>영화 평점: {{ movie.vote_average }}</p>
-    <p>영화 줄거리: {{ movie.overview }}</p>
-    {% for related_gun in movie.related_guns.all %}
-    <img src="{% static related_gun.gun_image_path %}" alt="gun_image">
-    <a href="{% url 'guns:detail' related_gun.pk%}">{{ related_gun.gun_name }}</a>
-    {% endfor %}
-    <div id="main-content">
-      <div>
-        <input type="checkbox" id="checkbox" class="like-{{ movie.pk }}" data-movie-id="{{ movie.pk }}"
-        {% if user in movie.like_users.all %}
-          checked
-        {% endif %}
-        />
-        <label for="checkbox">
-          <svg id="heart-svg" viewBox="467 392 58 57" xmlns="http://www.w3.org/2000/svg">
-            <g id="Group" fill="none" fill-rule="evenodd" transform="translate(467 392)">
-              <path d="M29.144 20.773c-.063-.13-4.227-8.67-11.44-2.59C7.63 28.795 28.94 43.256 29.143 43.394c.204-.138 21.513-14.6 11.44-25.213-7.214-6.08-11.377 2.46-11.44 2.59z" id="heart" fill="#AAB8C2"/>
-              <circle id="main-circ" fill="#E2264D" opacity="0" cx="29.5" cy="29.5" r="1.5"/>
-    
-              <g id="grp7" opacity="0" transform="translate(7 6)">
-                <circle id="oval1" fill="#9CD8C3" cx="2" cy="6" r="2"/>
-                <circle id="oval2" fill="#8CE8C3" cx="5" cy="2" r="2"/>
-              </g>
-    
-              <g id="grp6" opacity="0" transform="translate(0 28)">
-                <circle id="oval1" fill="#CC8EF5" cx="2" cy="7" r="2"/>
-                <circle id="oval2" fill="#91D2FA" cx="3" cy="2" r="2"/>
-              </g>
-    
-              <g id="grp3" opacity="0" transform="translate(52 28)">
-                <circle id="oval2" fill="#9CD8C3" cx="2" cy="7" r="2"/>
-                <circle id="oval1" fill="#8CE8C3" cx="4" cy="2" r="2"/>
-              </g>
-    
-              <g id="grp2" opacity="0" transform="translate(44 6)">
-                <circle id="oval2" fill="#CC8EF5" cx="5" cy="6" r="2"/>
-                <circle id="oval1" fill="#CC8EF5" cx="2" cy="2" r="2"/>
-              </g>
-    
-              <g id="grp5" opacity="0" transform="translate(14 50)">
-                <circle id="oval1" fill="#91D2FA" cx="6" cy="5" r="2"/>
-                <circle id="oval2" fill="#91D2FA" cx="2" cy="2" r="2"/>
-              </g>
-    
-              <g id="grp4" opacity="0" transform="translate(35 50)">
-                <circle id="oval1" fill="#F48EA7" cx="6" cy="5" r="2"/>
-                <circle id="oval2" fill="#F48EA7" cx="2" cy="2" r="2"/>
-              </g>
-    
-              <g id="grp1" opacity="0" transform="translate(24)">
-                <circle id="oval1" fill="#9FC7FA" cx="2.5" cy="3" r="2"/>
-                <circle id="oval2" fill="#9FC7FA" cx="7.5" cy="2" r="2"/>
-              </g>
-            </g>
-          </svg>
-        </label>
+  <div class='movie-info container'>
+    <div class='row text-center py-3' style="border-bottom: solid 2px white;">
+      <div class='col-8'>
+        <h2 style='padding-left: 450px; font-size:1.8rem; padding-top: 10px; margin-bottom: 0px;'>{{ movie.title }}</h2>
+      </div>
+      <div class='col-4'>
+        <div id="main-content" class='col-4 d-flex align-items-center justify-content-center'>
+          <div>
+            <input type="checkbox" id="checkbox" class="like-{{ movie.pk }}" data-movie-id="{{ movie.pk }}"
+            {% if user in movie.like_users.all %}
+              checked
+            {% endif %}
+            />
+            <label for="checkbox">
+              <svg id="heart-svg" viewBox="467 392 58 57" xmlns="http://www.w3.org/2000/svg">
+                <g id="Group" fill="none" fill-rule="evenodd" transform="translate(467 392)">
+                  <path d="M29.144 20.773c-.063-.13-4.227-8.67-11.44-2.59C7.63 28.795 28.94 43.256 29.143 43.394c.204-.138 21.513-14.6 11.44-25.213-7.214-6.08-11.377 2.46-11.44 2.59z" id="heart" fill="#AAB8C2"/>
+                  <circle id="main-circ" fill="#E2264D" opacity="0" cx="29.5" cy="29.5" r="1.5"/>
+        
+                  <g id="grp7" opacity="0" transform="translate(7 6)">
+                    <circle id="oval1" fill="#9CD8C3" cx="2" cy="6" r="2"/>
+                    <circle id="oval2" fill="#8CE8C3" cx="5" cy="2" r="2"/>
+                  </g>
+        
+                  <g id="grp6" opacity="0" transform="translate(0 28)">
+                    <circle id="oval1" fill="#CC8EF5" cx="2" cy="7" r="2"/>
+                    <circle id="oval2" fill="#91D2FA" cx="3" cy="2" r="2"/>
+                  </g>
+        
+                  <g id="grp3" opacity="0" transform="translate(52 28)">
+                    <circle id="oval2" fill="#9CD8C3" cx="2" cy="7" r="2"/>
+                    <circle id="oval1" fill="#8CE8C3" cx="4" cy="2" r="2"/>
+                  </g>
+        
+                  <g id="grp2" opacity="0" transform="translate(44 6)">
+                    <circle id="oval2" fill="#CC8EF5" cx="5" cy="6" r="2"/>
+                    <circle id="oval1" fill="#CC8EF5" cx="2" cy="2" r="2"/>
+                  </g>
+        
+                  <g id="grp5" opacity="0" transform="translate(14 50)">
+                    <circle id="oval1" fill="#91D2FA" cx="6" cy="5" r="2"/>
+                    <circle id="oval2" fill="#91D2FA" cx="2" cy="2" r="2"/>
+                  </g>
+        
+                  <g id="grp4" opacity="0" transform="translate(35 50)">
+                    <circle id="oval1" fill="#F48EA7" cx="6" cy="5" r="2"/>
+                    <circle id="oval2" fill="#F48EA7" cx="2" cy="2" r="2"/>
+                  </g>
+        
+                  <g id="grp1" opacity="0" transform="translate(24)">
+                    <circle id="oval1" fill="#9FC7FA" cx="2.5" cy="3" r="2"/>
+                    <circle id="oval2" fill="#9FC7FA" cx="7.5" cy="2" r="2"/>
+                  </g>
+                </g>
+              </svg>
+            </label>
+          </div>
+          <span id="like-count-{{ movie.pk }}" style='font-size: 30px;'>{{ movie.like_users.all|length }}</span>
+        </div>
       </div>
     </div>
-    <p><span id="like-count-{{ movie.pk }}">{{ movie.like_users.all|length }}</span> 명이 이 영화를 좋아합니다.</p>
-    {% if user.is_superuser %}
-      <a href="{% url 'movies:update' movie.title %}"><button>영화 정보 수정</button></a>
-    {% endif %}
-    <a href="{% url 'community:create' movie.pk %}"><button>영화 리뷰 작성</button></a>
-    <a href="{% url 'movies:index' %}"><button>뒤로가기</button></a>
-    {% if user.is_superuser %}
-      <form action="" method="POST">
-        {% csrf_token %}
-        <button onclick="return confirm('정말 삭제하시겠습니까?')">영화 삭제</button>
-      </form>
-    {% endif %}
+    <div class='row my-3'>
+      <div class='card-title d-flex justify-content-center'>
+        <img style='width: 500px;' src="{{ movie.poster_path }}" alt="{{ movie.title }}">
+      </div>
+    </div>
+    <div class='card-body'>
+      <div class='row'>
+        <div class='col-4 inner-border'>
+          <p style='margin: 10px 0px;'>장르</p>
+        </div>
+        <div class='col-8 inner-border'>
+          <p  style='margin: 10px 0px;'>
+            {% for genre in movie.genres.all %}
+              {{ genre }}
+            {% endfor %}
+          </p>
+        </div>
+      </div>
+      <div class='row'>
+        <div class='col-4 inner-border'>
+          <p style='margin: 10px 0px;'>영화 개봉일</p>
+        </div>
+        <div class='col-8 inner-border'>
+          <p style='margin: 10px 0px;'>{{ movie.release_date }}</p>
+        </div>
+      </div>
+      <div class='row'>
+        <div class='col-4 inner-border'>
+          <p style='margin: 10px 0px;'>인기도</p>
+        </div>
+        <div class='col-8 inner-border'>
+          <p style='margin: 10px 0px;'>{{ movie.popularity }}</p>
+        </div>
+      </div>
+      <div class='row'>
+        <div class='col-4 inner-border'>
+          <p style='margin: 10px 0px;'>영화 평점</p>
+        </div>
+        <div class='col-8 inner-border'>
+          <p style='margin: 10px 0px;'>{{ movie.vote_average }}</p>    
+        </div>
+      </div>
+      <div class='row'>
+        <div class='col-4 inner-border'>
+          <p class='d-flex justify-content-center'>영화 줄거리</p>
+        </div>
+        <div class='col-8 inner-border'>
+          <p style='margin: 10px 0px;'>{{ movie.overview }}</p>
+        </div>
+      </div>
+    </div>
+    <div class='container' style='border: solid 2px white; margin-bottom: 20px;'>
+      <div class='row d-flex justify-content-center py-3 h2' style='border-bottom: solid 2px white;'>
+        {{ movie.title }}에 등장한 총기
+      </div>
+      <div class='row d-flex justify-content-center'>
+          {% for related_gun in movie.related_guns.all %}
+          <div class=' gun-card card col-5 d-flex align-items-center'>
+            <div class='card-title d-flex align-items-center' style='min-height: 300px; border-bottom: solid 0.1em black;'>
+            <img src="{% static related_gun.gun_image_path %}" alt="gun_image">
+            </div>
+            <div class='card-body'>
+              <li class='d-flex justify-content-center'><a href="{% url 'guns:detail' related_gun.pk%}" class=''>{{ related_gun.gun_name }}</a></li>
+            </div>
+          </div>
+          {% endfor %}
+      </div>
+    </div>
+    <div>
+      <div class='d-flex justify-content-evenly mb-3'>
+        {% if user.is_superuser %}
+        <a href="{% url 'movies:update' movie.title %}"><button>영화 정보 수정</button></a>
+        {% endif %}
+        <a href="{% url 'community:create' movie.pk %}"><button>영화 리뷰 작성</button></a>
+        <a href="{% url 'movies:index' %}"><button>뒤로가기</button></a>
+        {% if user.is_superuser %}
+          <form action="" method="POST">
+            {% csrf_token %}
+            <button onclick="return confirm('정말 삭제하시겠습니까?')">영화 삭제</button>
+          </form>
+        {% endif %}
+      </div>
+    </div>  
   </div>
+
 {% endblock %}
 
 {% block script %}

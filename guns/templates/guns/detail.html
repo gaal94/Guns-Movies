@@ -218,75 +218,158 @@
         transform: scale(1);
       }
     }
+
+    .gun-info {
+      border: solid 0.2em white;
+      margin-top: 80px;
+    }
+
+    .inner-border {
+      border: solid 0.1em white;
+      text-align: center;
+    }
+
+    .movie-link {
+      background-color : transparent;
+      border: none;
+    }
+
+    a {
+      text-decoration: none;
+      color: white;
+    }
+
+    a:hover {
+      color: orange;
+    }
+
   </style>
 {% endblock style %}
 
 {% block content %}
-  <h1>총 이름: {{ gun.gun_name }}</h1>
-  <img style='width: 200px;' src="{% static gun.gun_image_path %}" alt="AK-47">
-  <p>총 제작자 : {{ gun.manufacturer }}</p>
-  <p>총 무게 : {{ gun.gun_weight }}</p>
-  <p>총 길이 : {{ gun.gun_length }}</p>
-  <p>구경 : {{ gun.gun_caliber }}</p>
-  <p>종류 : {{ gun.gun_type }}</p>
-  {% for related_movie in gun.related_movies.all %}
-    <img src={{ related_movie.poster_path }} alt="movie_poster">
-    <a href="{% url 'movies:detail' related_movie.pk %}">{{ related_movie.title }}</a>
-  {% endfor %}
-  <div id="main-content">
+
+  <div class='gun-info container'>
+    <div class='row text-center py-3' style="border-bottom: solid 2px white;">
+      <p class='col-8' style='padding-left: 450px; font-size:1.5rem; padding-top: 10px;'>{{ gun.gun_name }}</p>
+      <div id="main-content" class='col-4 d-flex align-items-center justify-content-center'>
+        <div>
+          <input type="checkbox" id="checkbox-{{ gun.pk }}" class="checkbox" data-gun-id="{{ gun.pk }}"
+          {% if user in gun.like_users.all %}
+            checked
+          {% endif %}
+          />
+          <label for="checkbox-{{ gun.pk }}">
+            <svg id="heart-svg" viewBox="467 392 58 57" xmlns="http://www.w3.org/2000/svg">
+              <g id="Group" fill="none" fill-rule="evenodd" transform="translate(467 392)">
+                <path d="M29.144 20.773c-.063-.13-4.227-8.67-11.44-2.59C7.63 28.795 28.94 43.256 29.143 43.394c.204-.138 21.513-14.6 11.44-25.213-7.214-6.08-11.377 2.46-11.44 2.59z" id="heart" fill="#AAB8C2"/>
+                <circle id="main-circ" fill="#E2264D" opacity="0" cx="29.5" cy="29.5" r="1.5"/>
+      
+                <g id="grp7" opacity="0" transform="translate(7 6)">
+                  <circle id="oval1" fill="#9CD8C3" cx="2" cy="6" r="2"/>
+                  <circle id="oval2" fill="#8CE8C3" cx="5" cy="2" r="2"/>
+                </g>
+      
+                <g id="grp6" opacity="0" transform="translate(0 28)">
+                  <circle id="oval1" fill="#CC8EF5" cx="2" cy="7" r="2"/>
+                  <circle id="oval2" fill="#91D2FA" cx="3" cy="2" r="2"/>
+                </g>
+      
+                <g id="grp3" opacity="0" transform="translate(52 28)">
+                  <circle id="oval2" fill="#9CD8C3" cx="2" cy="7" r="2"/>
+                  <circle id="oval1" fill="#8CE8C3" cx="4" cy="2" r="2"/>
+                </g>
+      
+                <g id="grp2" opacity="0" transform="translate(44 6)">
+                  <circle id="oval2" fill="#CC8EF5" cx="5" cy="6" r="2"/>
+                  <circle id="oval1" fill="#CC8EF5" cx="2" cy="2" r="2"/>
+                </g>
+      
+                <g id="grp5" opacity="0" transform="translate(14 50)">
+                  <circle id="oval1" fill="#91D2FA" cx="6" cy="5" r="2"/>
+                  <circle id="oval2" fill="#91D2FA" cx="2" cy="2" r="2"/>
+                </g>
+      
+                <g id="grp4" opacity="0" transform="translate(35 50)">
+                  <circle id="oval1" fill="#F48EA7" cx="6" cy="5" r="2"/>
+                  <circle id="oval2" fill="#F48EA7" cx="2" cy="2" r="2"/>
+                </g>
+      
+                <g id="grp1" opacity="0" transform="translate(24)">
+                  <circle id="oval1" fill="#9FC7FA" cx="2.5" cy="3" r="2"/>
+                  <circle id="oval2" fill="#9FC7FA" cx="7.5" cy="2" r="2"/>
+                </g>
+              </g>
+            </svg>
+          </label>
+        </div>
+        <span id="like-count-{{ gun.pk }}"  style='font-size: 30px;'>{{ gun.like_users.all|length }}</span>
+      </div>
+    </div>
+    <div class='row my-3'>
+      <div class='card-title d-flex justify-content-center'>
+        <img style='width: 500px;' src="{% static gun.gun_image_path %}" alt="gun_image">
+      </div>
+    </div>
+    <div class='gun-spec card-body'>
+      <div class='row'>
+        <div class='col-4 inner-border'>
+          <p style='margin: 10px 0px;'>총 제작자</p>
+        </div>
+        <div class='col-8 inner-border'>
+          <p style='margin: 10px 0px;'>{{ gun.manufacturer }}</p>
+        </div>
+      </div>
+      <div class='row'>
+        <div class='col-4 inner-border'>
+          <p style='margin: 10px 0px;'>총 무게</p>
+        </div>
+        <div class='col-8 inner-border'>
+          <p style='margin: 10px 0px;'>{{ gun.gun_weight }}</p>
+        </div>
+      </div>
+      <div class='row'>
+        <div class='col-4 inner-border'>
+          <p style='margin: 10px 0px;'>총 길이</p>
+        </div>
+        <div class='col-8 inner-border'>
+          <p style='margin: 10px 0px;'>{{ gun.gun_length }}</p>
+        </div>
+      </div>
+      <div class='row'>
+        <div class='col-4 inner-border'>
+          <p style='margin: 10px 0px;'>총 구경</p>
+        </div>
+        <div class='col-8 inner-border'>
+          <p style='margin: 10px 0px;'>{{ gun.gun_caliber }}</p>
+        </div>
+      </div>
+      <div class='row'>
+        <div class='col-4 inner-border'>
+          <p style='margin: 10px 0px;'>총 종류</p>
+        </div>
+        <div class='col-8 inner-border'>
+          <p style='margin: 10px 0px;'>{{ gun.gun_type }}</p>
+        </div>
+      </div>
+    </div>
     <div>
-      <input type="checkbox" id="checkbox-{{ gun.pk }}" class="checkbox" data-gun-id="{{ gun.pk }}"
-      {% if user in gun.like_users.all %}
-        checked
-      {% endif %}
-      />
-      <label for="checkbox-{{ gun.pk }}">
-        <svg id="heart-svg" viewBox="467 392 58 57" xmlns="http://www.w3.org/2000/svg">
-          <g id="Group" fill="none" fill-rule="evenodd" transform="translate(467 392)">
-            <path d="M29.144 20.773c-.063-.13-4.227-8.67-11.44-2.59C7.63 28.795 28.94 43.256 29.143 43.394c.204-.138 21.513-14.6 11.44-25.213-7.214-6.08-11.377 2.46-11.44 2.59z" id="heart" fill="#AAB8C2"/>
-            <circle id="main-circ" fill="#E2264D" opacity="0" cx="29.5" cy="29.5" r="1.5"/>
-  
-            <g id="grp7" opacity="0" transform="translate(7 6)">
-              <circle id="oval1" fill="#9CD8C3" cx="2" cy="6" r="2"/>
-              <circle id="oval2" fill="#8CE8C3" cx="5" cy="2" r="2"/>
-            </g>
-  
-            <g id="grp6" opacity="0" transform="translate(0 28)">
-              <circle id="oval1" fill="#CC8EF5" cx="2" cy="7" r="2"/>
-              <circle id="oval2" fill="#91D2FA" cx="3" cy="2" r="2"/>
-            </g>
-  
-            <g id="grp3" opacity="0" transform="translate(52 28)">
-              <circle id="oval2" fill="#9CD8C3" cx="2" cy="7" r="2"/>
-              <circle id="oval1" fill="#8CE8C3" cx="4" cy="2" r="2"/>
-            </g>
-  
-            <g id="grp2" opacity="0" transform="translate(44 6)">
-              <circle id="oval2" fill="#CC8EF5" cx="5" cy="6" r="2"/>
-              <circle id="oval1" fill="#CC8EF5" cx="2" cy="2" r="2"/>
-            </g>
-  
-            <g id="grp5" opacity="0" transform="translate(14 50)">
-              <circle id="oval1" fill="#91D2FA" cx="6" cy="5" r="2"/>
-              <circle id="oval2" fill="#91D2FA" cx="2" cy="2" r="2"/>
-            </g>
-  
-            <g id="grp4" opacity="0" transform="translate(35 50)">
-              <circle id="oval1" fill="#F48EA7" cx="6" cy="5" r="2"/>
-              <circle id="oval2" fill="#F48EA7" cx="2" cy="2" r="2"/>
-            </g>
-  
-            <g id="grp1" opacity="0" transform="translate(24)">
-              <circle id="oval1" fill="#9FC7FA" cx="2.5" cy="3" r="2"/>
-              <circle id="oval2" fill="#9FC7FA" cx="7.5" cy="2" r="2"/>
-            </g>
-          </g>
-        </svg>
-      </label>
+      <div class='container' style='border: solid 2px white; margin-bottom: 20px;'>
+        <div class='row d-flex justify-content-center py-3 h2' style='border-bottom: solid 2px white;'>{{ gun.gun_name }}이 등장한 영화목록</div>
+        <div class='row'>
+          {% for related_movie in gun.related_movies.all %}
+            <div class='movie-link card col-2 d-flex align-items-center'>
+              <li style='margin: 5px 0px; max-width: 200px;' class='d-inline text-truncate'><a href="{% url 'movies:detail' related_movie.pk %}">{{ related_movie.title }}</a></li>
+            </div>
+          {% endfor %}
+        </div>
+      </div>
     </div>
   </div>
-  <p><span id="like-count-{{ gun.pk }}">{{ gun.like_users.all|length }}</span> 명이 이 총을 좋아합니다.</p>
-  <a href="{% url 'guns:index' %}"><button>뒤로가기</button></a>
+
+  <div class='d-flex justify-content-center mt-3'>
+    <a href="{% url 'guns:index' %}"><button>뒤로가기</button></a>
+  </div>
+  
 {% endblock %}
 
 {% block script %}
