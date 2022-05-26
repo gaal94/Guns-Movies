@@ -1,10 +1,9 @@
 {% extends 'base.html' %}
-{% load static %}
 
+{% load static %}
 
 {% block style %}
   <style>
-
     .outer-div {
       height: 1000px;
     }
@@ -24,24 +23,17 @@
     .info-div {
       top: 100px;
       margin-top: 50px;
-      background-color: red;
     }
 
     .countNum {
-      {% comment %} position: absolute; {% endcomment %}
-      {% comment %} left: 1000px; {% endcomment %}
-      
       font-size: 2rem;
       margin-bottom: 0px;
-      
     }
 
     .can {
       width: 160px;
       height: 250px;
-      
     }
-
 
     .explosion {
       display: none;
@@ -60,7 +52,6 @@
       position: relative;
       z-index: 2;
       left: 80px;
-      
     }
     
     .ul2 {
@@ -94,30 +85,22 @@
     .disappear {
       opacity: 0;
     }
-
-
-
-
-
   </style>
-
 {% endblock style %}
 
 {% block content %}
+<img id="explosion" class="explosion" src="{% static 'home/explosion3.png' %}" alt="explosion_image">
 
-<img id='explosion' class='explosion' src="{% static 'home/explosion3.png' %}" alt="explosion_image">
-
-<div>
-  <div id='info-div' class='info-div d-flex justify-content-center'>
-    <p id='countNum' class='countNum'>COUNT : 0</p>
-    <button id='startButton' class='d-block'>START</button>
+<div class="d-flex justify-content-center">
+  <div id="info-div" class="info-div d-flex justify-content-center align-items-center bg-warning border border-3 border-dark" style="width: 300px; height: 70px;">
+    <p id="countNum" class="countNum">COUNT : 0</p>
+    <button id="startButton" class="d-block ms-3" style="height: 50px">START</button>
   </div>
 </div>
 
 <div class='outer-div d-flex justify-content-center'>
   <div id='countField' class='countField'>
     <div style='height: 1000px;'>
-      {% comment %} disappear {% endcomment %}
       <ul class='clearfixed ul1'> 
         <li ><img id='can1' class='can disappear' src="{% static 'home/pixel_can2.png' %}" alt="can_image"></li>
         <li ><img id='can2' class='can disappear' src="{% static 'home/pixel_can2.png' %}" alt="can_image"></li>
@@ -146,8 +129,6 @@
 <div class="modal">
   <div class="content" style="height: 425px;  width: 425px;">
     <h2 style="margin-bottom: 30px;margin-top: 50px;"> 추천 영화 찾는 중 ... </h2>
-    {% comment %} <p style="margin-bottom: 0px;margin-top: 0px;">You left something in your cart.</p>
-    <p style="margin-bottom: 43px; margin-top: 0px;"> Check out today!</p>  {% endcomment %}
   </div>
 </div>
 {% endblock content %}
@@ -173,12 +154,6 @@
       })
     })
 
-    {% comment %} cans.forEach(can => {can.addEventListener('click', function () {
-      console.log('HIT')
-      count ++
-      countNum.innerText = 'COUNT: ' + count
-    })}) {% endcomment %}
-
     countField.onclick = function (event) {
       var element = explosion.cloneNode(), shotSound;
       document.body.appendChild(element);
@@ -193,44 +168,26 @@
       shotSound.src = 'http://soundbible.com/mp3/9_mm_gunshot-mike-koenig-123.mp3';
       shotSound.volume = 0.1
       shotSound.play();
-      
     }
 
     function randomTime() {
       return 800
-      // Math.round(Math.random() * (1.1 - 0.1) + 0.1) //시간 문제 0, 1
     }
 
-
-    
     function randomCan () {
       let numbers = []
       cans.forEach(can => {
         if (can.classList.contains('disappear')) {
-          
           numbers.push(Number(can.id.split('can')[1]))
         }
       })
-      
-      
       return _.sample(numbers)
-      
-
-      //randomNum = _.random(1, 12)
-      //canNum = document.getElementById(`can${randomNum}`)
-      //return canNum
-      // canNum.style.display = 'inline'
     }
 
-    
     function showCan() {
       const time = randomTime()
       const randumCan = randomCan()
       const canShow = document.querySelector(`#can${randumCan}`)
-      // if (!canShow.classList.contains('disappear')) {
-      //  console.log('same can')
-      //  return showCan()
-      // }
 
       setTimeout(() => {
         if (randumCan !== undefined) {
@@ -256,7 +213,6 @@
     startButton.onclick = function () {
       startGame()
     }
-
   </script>
 
 {% endblock script %}
