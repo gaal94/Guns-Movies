@@ -31,7 +31,7 @@ def results(request, count):
     #  movies = Movie.objects.filter(related_guns__gun_name__icontains = guns)
     movies = Movie.objects.filter(related_guns__gun_type__type_name__exact=your_gun)
     movie = movies.order_by('?')[0]
-    print(movie)
+    
     
     
 
