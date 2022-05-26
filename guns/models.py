@@ -14,8 +14,9 @@ class Gun(models.Model):
     gun_weight = models.CharField(max_length=50)
     gun_length = models.CharField(max_length=50)
     gun_caliber = models.CharField(max_length=50)
-    gun_type = models.ForeignKey(GunType, on_delete=models.CASCADE)
     gun_image_path = models.CharField(max_length=200)
+    gun_youtube_url = models.CharField(max_length=300, null=True, blank=True)
+    gun_type = models.ForeignKey(GunType, on_delete=models.CASCADE)
     like_users = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='like_guns', blank=True)
 
     def __str__(self):
