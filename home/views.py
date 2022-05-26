@@ -27,9 +27,9 @@ def results(request, count):
     elif count >= 0:
         your_gun = 'Sniper Rifle'
     
-    guns = Gun.objects.filter(gun_type__type_name__icontains=your_gun)
+    guns = Gun.objects.filter(gun_type__type_name__exact=your_gun)
     #  movies = Movie.objects.filter(related_guns__gun_name__icontains = guns)
-    movies = Movie.objects.filter(related_guns__gun_type__type_name__icontains=your_gun)
+    movies = Movie.objects.filter(related_guns__gun_type__type_name__exact=your_gun)
     movie = movies.order_by('?')[0]
     print(movie)
     
