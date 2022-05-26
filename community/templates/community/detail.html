@@ -328,7 +328,7 @@
                     <button class="btn btn-success">리뷰 삭제</button>
                   </form>
                 </div>
-              </tdle=>
+              </td>
             </tr>
           {% endif %}
         </tbody>
@@ -352,11 +352,17 @@
     {% endfor %}
     <hr>
     {% if request.user.is_authenticated %}
-      <form action="{% url 'community:create_comment' review.pk %}" method="POST">
+      <form action="{% url 'community:create_comment' review.pk %}" method="POST" class="d-flex">
         {% csrf_token %}
-        <span>댓글 : </span>
-        {{ comment_form.content }}
-        <input type="submit" value="등록" class="btn btn-light" style="font-size: 15px;">
+        <div>
+          <p>댓글 : </p>
+        </div>
+        <div>
+          {{ comment_form.content }}
+        </div>
+        <div class="d-flex align-items-end">
+          <button class="btn btn-light mx-2" style="font-size: 15px;">등록</button>
+        </div>
       </form>
     {% else %}
       <a href="{% url 'accounts:login' %}">[댓글을 작성하려면 로그인하세요.]</a>

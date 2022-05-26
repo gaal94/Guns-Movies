@@ -222,18 +222,22 @@
 
 {% block content %}
   <div class="m-3">
-    <h1>Reviews</h1>
-    <form action="{% url 'community:index' %}">
-        <select name="search_type" id="search_type">
-          <option value="search_by_review_title">리뷰 제목</option>
-          <option value="search_by_review_content">리뷰 내용</option>
-          <option value="search_by_review_user">리뷰 작성자</option>
-          <option value="search_by_movie_title">영화 제목</option>
-          <option value="search_by_comment_content">댓글 내용</option>
-          <option value="search_by_comment_user">댓글 작성자</option>
-        </select>
-        <input type="text" name="search_keyword"><button>검색</button></p>
-    </form>
+    <div class="text-center">
+      <h1>Reviews</h1>
+    </div>
+    <div class="d-flex justify-content-center">
+      <form action="{% url 'community:index' %}">
+          <select name="search_type" id="search_type">
+            <option value="search_by_review_title">리뷰 제목</option>
+            <option value="search_by_review_content">리뷰 내용</option>
+            <option value="search_by_review_user">리뷰 작성자</option>
+            <option value="search_by_movie_title">영화 제목</option>
+            <option value="search_by_comment_content">댓글 내용</option>
+            <option value="search_by_comment_user">댓글 작성자</option>
+          </select>
+          <input type="text" name="search_keyword"><button>검색</button></p>
+      </form>
+    </div>
     <hr>
     <div class="d-flex">
       <div class="list-group">

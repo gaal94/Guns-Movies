@@ -7,6 +7,7 @@ from movies.models import Movie
 from django.contrib.auth.decorators import login_required
 import math
 
+
 @require_GET
 def index(request):
     search_keyword = request.GET.get('search_keyword')
@@ -74,7 +75,6 @@ def index(request):
     valid_pagelist = math.ceil(valid_page / 10)
     valid_pagelists = [i for i in range(1, valid_pagelist)]
     if reviews_or_comments == 'reviews':
-        print(reviews)
         context = {
             'reviews': reviews,
             'typeof': typeof,
@@ -106,12 +106,12 @@ def index(request):
 @login_required
 @require_http_methods(['GET', 'POST'])
 def create(request, movie_pk):
+    movie = get_object_or_404(Movie, pk=movie_pk)
     if request.method == 'POST':
         form = ReviewForm(request.POST) 
         if form.is_valid():
             review = form.save(commit=False)
             review.user = request.user
-            movie = get_object_or_404(Movie, pk=movie_pk)
             review.movie_title = movie
             review.save()
             return redirect('community:detail', review.pk)
@@ -119,7 +119,7 @@ def create(request, movie_pk):
         form = ReviewForm()
     context = {
         'form': form,
-        'movie_pk': movie_pk,
+        'movie': movie,
     }
     return render(request, 'community/create.html', context)
 
@@ -146,6 +146,7 @@ def detail(request, review_pk):
 @require_http_methods(['GET', 'POST'])
 def update(request, review_pk):
     review = get_object_or_404(Review, pk=review_pk)
+    movie = get_object_or_404(Movie, pk=review.movie_title.pk)
     if review.user == request.user:
         if request.method == 'POST':
             form = ReviewForm(request.POST, instance=review) 
@@ -159,6 +160,7 @@ def update(request, review_pk):
     context = {
         'form': form,
         'review': review,
+        'movie': movie,
     }
     return render(request, 'community/update.html', context)
     
